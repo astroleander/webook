@@ -1,0 +1,22 @@
+{
+  "name": "@webrary/vue",
+  "version": "0.0.1",
+  "description": "the common powers for vue thing",
+  "main": "index.js",
+  "author": "astrexile",
+  "license": "MIT",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "dependencies": {
+    "vue": "^3.2.33"
+  },
+  "devDependencies": {
+    "@vue/compiler-sfc": "^3.2.33",
+    "classnames": "^2.3.1",
+    "less": "^4.1.2",
+    "typescript": "^4.6.4",
+    "vue-tsc": "^0.34.11"
+  }
+}

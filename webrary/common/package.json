@@ -1,0 +1,18 @@
+{
+  "name": "@webrary/common",
+  "version": "0.0.1",
+  "description": "the common powers for everything",
+  "main": "index.js",
+  "author": "astrexile",
+  "license": "MIT",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "dependencies": {
+  },
+  "devDependencies": {
+    "less": "^4.1.2",
+    "typescript": "^4.6.4"
+  }
+}

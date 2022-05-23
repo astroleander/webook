@@ -1,0 +1,5 @@
+packages:
+  - '.' # the root 'package.json'
+  - 'weboratory' # 'weboratory/package.json'
+  - 'webrary/**' # 'any package.json under webrary/'
+# @see https://pnpm.io/zh/pnpm-workspace_yaml

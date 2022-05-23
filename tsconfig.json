@@ -1,0 +1,9 @@
+{
+  "compilerOptions": {
+    "lib": [
+      "ESNEXT"
+    ],
+    "composite": true,
+    "esModuleInterop": true,
+  }
+}
