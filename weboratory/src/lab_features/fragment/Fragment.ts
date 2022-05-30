@@ -1,4 +1,4 @@
-import { ModuleManagerSelector, ModuleType } from './container/loader';
+import { ModuleManagerSelector, getModuleTypeFromIdentifier } from './container/loader';
 import { generateMetaRecordsFooter } from './footer';
 import { BUTTON_KEYS, selectHeaderButton } from './header';
 
@@ -49,8 +49,10 @@ class Fragment {
     const container = this.element?.querySelector('main');
 
     const loadComponent = async () => {
+      console.log('[load component]', identifier);
       if (container) {
-        const moduleManager = await ModuleManagerSelector[ModuleType.REACT_DOM](module, container);
+        const moduleType = getModuleTypeFromIdentifier(identifier);
+        const moduleManager = await ModuleManagerSelector[moduleType](module, container);
         this.mount = moduleManager.mount;
         this.unmount = moduleManager.unmount;
         this.meta = moduleManager.meta;

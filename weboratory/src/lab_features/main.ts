@@ -15,9 +15,10 @@ const addToRoutesList = (module_name: string) => {
   const li = document.createElement('li');
   li.innerHTML = module_name;
   li.onclick = () => {
-    routes[module_name](/** execute load */).then(async module => {
+    const {load, default_path: path} = routes[module_name];
+    load().then(async module => {
       const fragment = await FragmentFactory.create({
-        module: module['Sample'],
+        module: module[path],
         identifier: module_name
       });
       fragment && main?.appendChild(fragment);

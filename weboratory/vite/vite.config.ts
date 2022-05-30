@@ -5,10 +5,10 @@ import vue from '@vitejs/plugin-vue'
 // plugins - custom
 import { consolePathsPrintPlugin } from './plugins';
 // system
-import path from 'path';
 
 import { input_folders } from './utils';
 import { OUT_DIR, ROOT } from '../shared.config';
+import { svelte } from '@sveltejs/vite-plugin-svelte';
 
 // https://vitejs.dev/config/
 export default defineConfig({
@@ -31,6 +31,7 @@ export default defineConfig({
     }
   },
   plugins: [
+    svelte({}),
     react(),
     vue(),
     consolePathsPrintPlugin(),
