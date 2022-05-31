@@ -55,10 +55,9 @@ class Fragment {
         const moduleManager = await ModuleManagerSelector[moduleType](module, container);
         this.mount = moduleManager.mount;
         this.unmount = moduleManager.unmount;
-        this.meta = moduleManager.meta;
         this.mount();
 
-        this.setFooter();
+        this.setFooter(moduleManager.meta);
       } else {
         console.warn('[Template Parsing Warning] Didn\'t find main element in your template');
         return;
@@ -80,10 +79,15 @@ class Fragment {
     return this;
   }
 
-  setFooter(meta?: Record<string, string>) {
-    const mergedMeta = Object.assign(this.meta, meta);
+  setFooter(addon?: Record<string, string>) {
+    const mergedMeta = Object.assign(addon, this.meta);
     const footer = this.element?.querySelector('footer');
     footer?.append(...generateMetaRecordsFooter(mergedMeta));
+  }
+
+  setMeta(meta?: Record<string, string>) {
+    this.meta = meta ?? {};
+    return this;
   }
 }
 export const FragmentFactory = {
@@ -95,9 +99,13 @@ export const FragmentFactory = {
   create: async (props: {
     module: any,
     identifier: string,
-    wrapper_type?: string
+    wrapper_type?: string,
+    params?: {
+      github_page_link?: string
+    }
   }) => {
-    const { module, identifier, wrapper_type } = props;
+    const { module, identifier, wrapper_type, params } = props;
+    // const { github_page_link } = params ?? {};
 
     // [type, ...categories, name] = identifier
     const [type, ...categories] = identifier.split('.');
@@ -108,6 +116,7 @@ export const FragmentFactory = {
 
     const fragment = new Fragment(html_wrapper);
     fragment.setHeader(html_header, name)
+      .setMeta(params)
       .setContainerWithFooter(module, identifier)
       .setCallback('onRefresh', BUTTON_KEYS.REFRESH)
       .setCallback('onClose', BUTTON_KEYS.CLOSE)

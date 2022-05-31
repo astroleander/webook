@@ -15,11 +15,14 @@ const addToRoutesList = (module_name: string) => {
   const li = document.createElement('li');
   li.innerHTML = module_name;
   li.onclick = () => {
-    const {load, default_path: path} = routes[module_name];
+    const {load, default_module, ...params} = routes[module_name];
     load().then(async module => {
       const fragment = await FragmentFactory.create({
-        module: module[path],
-        identifier: module_name
+        module: module[default_module],
+        identifier: module_name,
+        params: {
+          github_page_link: params.github_page_link
+        }
       });
       fragment && main?.appendChild(fragment);
       // TODO: seprecated create routes & route-view
