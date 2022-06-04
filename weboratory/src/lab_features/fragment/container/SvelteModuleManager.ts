@@ -45,13 +45,13 @@ export class SvelteModuleManager implements ModuleManager {
 
   updatModule = this.loadModule
 
-  set type(v: string) {
+  set type(_v: string) {
     console.warn('Can\'t set type once initialized')
   }
-  set module(v: string) {
+  set module(_v: any) {
     console.warn('Can\'t set module once initialized')
   }
-  set meta(map: Record<string, string>) {
+  set meta(_map: Record<string, string>) {
     console.warn('Can\'t set module from outside')
   }
   get type() {
