@@ -1,10 +1,12 @@
 import { ReactModuleManager } from './ReactModuleManager';
 import { SvelteModuleManager } from './SvelteModuleManager';
+import { WebookModuleManager } from './WebookModuleManager';
 
 export enum ModuleType {
   REACT_DOM = 'react-dom',
   REACT = 'react',
   SVELTE = 'svelte',
+  WEBOOK = 'webook',
 }
 
 export interface ModuleManager {
@@ -30,6 +32,12 @@ export const ModuleManagerSelector: Record<ModuleType, (m: any, parent: Element)
     const controller = new SvelteModuleManager(m, p, ModuleType.SVELTE);
     await controller.loadModule();
     return controller;
+  },
+  // internal type
+  [ModuleType.WEBOOK]: async (m, p) => {
+    const c = new WebookModuleManager(m, p, ModuleType.WEBOOK);
+    await c.loadModule();
+    return c;
   }
 };
 

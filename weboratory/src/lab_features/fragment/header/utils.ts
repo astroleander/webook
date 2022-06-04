@@ -8,5 +8,5 @@ export type BUTTON_KEYS = typeof BUTTON_KEYS[keyof typeof BUTTON_KEYS];
 
 export const selectHeaderButton = (wrapper: Element, button: typeof BUTTON_KEYS[keyof typeof BUTTON_KEYS]) => {
   const buttonElement = wrapper.querySelector(`.${button}`);
-  return buttonElement as HTMLElement;
+  return buttonElement as HTMLElement | undefined;
 }

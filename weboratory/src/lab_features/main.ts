@@ -25,7 +25,17 @@ const addToRoutesList = (module_name: string) => {
         }
       });
       fragment && main?.appendChild(fragment);
-      // TODO: seprecated create routes & route-view
+      // TODO: seprecated create routes & route-view  
+    }).catch(async (err) => {
+      const fragment = await FragmentFactory.create({
+        identifier: `webook.error.${module_name}`,
+        module: {
+          error: err,
+          module_name,
+        },
+        params: {}
+      });
+      fragment && main?.appendChild(fragment);
     });
   }
   routesList.push(li);

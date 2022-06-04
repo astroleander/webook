@@ -1,6 +1,8 @@
+import { StyleClassList } from './constant';
 import { ModuleManagerSelector, getModuleTypeFromIdentifier } from './container/loader';
 import { generateMetaRecordsFooter } from './footer';
 import { BUTTON_KEYS, selectHeaderButton } from './header';
+import { mapKey } from './utils';
 
 type Module = any;
 /**
@@ -70,9 +72,9 @@ class Fragment {
   setCallback(cb_type: keyof Fragment, element_key: BUTTON_KEYS) {
     if (this.element) {
       const element = selectHeaderButton(this.element, element_key);
-      element.onclick = (e) => {
+      element && (element.onclick = (e) => {
         (this[cb_type] as Function)?.();
-      };
+      });
     } else {
       console.warn('[Template Parsing Warning] Didn\'t find header element in your template, can\'t set callback');
     }
@@ -100,19 +102,16 @@ export const FragmentFactory = {
     module: any,
     identifier: string,
     wrapper_type?: string,
-    params?: {
-      github_page_link?: string
-    }
+    params?: Record<string, any>
   }) => {
     const { module, identifier, wrapper_type, params } = props;
     // const { github_page_link } = params ?? {};
-
     // [type, ...categories, name] = identifier
-    const [type, ...categories] = identifier.split('.');
+    const [module_type, ...categories] = identifier.split('.');
     const name = categories.pop();
-
-    const html_wrapper = await FragmentFactory.getFragmentWrapper(wrapper_type);
-    const html_header = await FragmentFactory.getFragmentHeader(wrapper_type);
+    const styled_template_id = FragmentFactory.getFragmentTemplateId(wrapper_type, module_type, name, categories);
+    const html_wrapper = await FragmentFactory.getFragmentWrapper(styled_template_id);
+    const html_header = await FragmentFactory.getFragmentHeader(styled_template_id);
 
     const fragment = new Fragment(html_wrapper);
     fragment.setHeader(html_header, name)
@@ -126,27 +125,51 @@ export const FragmentFactory = {
    * Load Wrapper DocumentFragment from './wrappers/templates'
    * @returns {HTMLElement}
    */
-  getFragmentWrapper: async (wrapper_type?: string) => {
-    switch (wrapper_type) {
-      default:
-        return await import('./wrapper/templates/basic.html?raw').then((templateRawString) => {
-          const node = document.createRange().createContextualFragment(templateRawString.default);
-          // wrapper only has one root element
-          return node.cloneNode(true).firstChild as Element;
-        });
+  getFragmentWrapper: async (styled_template_id?: StyleClassList) => {
+    let templateFile = `basic`;
+    switch (styled_template_id) {
+      case StyleClassList.BASIC_ERROR:
+        templateFile = `basic.error`
+        break;
     }
+    return await import(`./wrapper/templates/${templateFile}.html?raw`).then((templateRawString) => {
+      const node = document.createRange().createContextualFragment(templateRawString.default);
+      // wrapper only has one root element
+      return node.cloneNode(true).firstChild as Element;
+    });
   },
   /**
    * Load Header DocumentFragment from './header/templates'
    * @returns {HTMLElement}
    */
-  getFragmentHeader: async (wrapper_type?: string) => {
-    switch (wrapper_type) {
-      default:
-        return await import(`./header/templates/mac.html?raw`).then((headerRawString) => {
-          const node = document.createRange().createContextualFragment(headerRawString.default);
-          return node.cloneNode(true) as Element;
-        })
+  getFragmentHeader: async (styled_template_id?: StyleClassList) => {
+    let templateFile = `mac`;
+    switch (styled_template_id) {
     }
+    return await import(`./header/templates/${templateFile}.html?raw`).then((templateRawString) => {
+      const node = document.createRange().createContextualFragment(templateRawString.default);
+      return node.cloneNode(true) as Element;
+    });
   },
+  /**
+   * @param wrapper_type the wrapper type defined by users manually
+   * @param module_type the route prefix, told the framework/tech types
+   * @param categories
+   */
+  getFragmentTemplateId: (wrapper_type: string | null | undefined, module_type: string, name: string | undefined, categories: string[]) => {
+    // TODO: wrapper_type priority
+    // const specific_categories_tags = categories.xx
+    if (module_type === 'webook') {
+      switch (categories?.[0]) {
+        case 'error':
+          return FragmentFactory.fragmentTemplateRules.get(mapKey(null, 'webook', 'error', null));
+      }
+    }
+    // console.log(mapKey(wrapper_type, module_type, name, null));
+    return FragmentFactory.fragmentTemplateRules.get(mapKey(wrapper_type, module_type, name, null));
+  },
+  fragmentTemplateRules: new Map([
+    [mapKey(null, 'webook', 'error', null), StyleClassList.BASIC_ERROR],
+  ])
 }
+
