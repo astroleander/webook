@@ -1,7 +1,7 @@
 export const BUTTON_KEYS = {
   REFRESH: 'button-refresh',
   CLOSE: 'button-close',
-  CALLAPSE: 'button-collapse',
+  COLLAPSE: 'button-collapse',
 } as const;
 
 export type BUTTON_KEYS = typeof BUTTON_KEYS[keyof typeof BUTTON_KEYS];
