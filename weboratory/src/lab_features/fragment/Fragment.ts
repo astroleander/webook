@@ -17,6 +17,8 @@ type Module = any;
 class Fragment {
   element?: Element;
   meta: Record<string, string> = {};
+  // status
+  collapsed: boolean = false;
   // container events
   mount: () => void = () => { };
   unmount: () => void = () => { };
@@ -29,6 +31,28 @@ class Fragment {
     this.unmount();
     this.mount();
   };
+  onCollapse = () => {
+    if (!this.collapsed) {
+      this.unmount();
+    } else {
+      this.mount();
+    }
+    
+    this.collapsed = !this.collapsed;
+    // if (!this.collapsed) {
+    //   Array.from(this.element?.children || []).forEach((e) => {
+    //     if ((e as HTMLElement).style && e.tagName !== 'HEADER') {
+    //       (e as HTMLElement).style.display = 'gone';
+    //     }
+    //   })
+    // } else {
+    //   Array.from(this.element?.children || []).forEach((e) => {
+    //     if ((e as HTMLElement).style && e.tagName !== 'HEADER') {
+    //       (e as HTMLElement).style.visibility = 'collapse';
+    //     }
+    //   })
+    // }
+  }
 
   constructor(node: Element) {
     this.element = node;
@@ -82,7 +106,7 @@ class Fragment {
   }
 
   setFooter(addon?: Record<string, string>) {
-    const mergedMeta = Object.assign(addon, this.meta);
+    const mergedMeta = Object.assign(addon || {}, this.meta);
     const footer = this.element?.querySelector('footer');
     footer?.append(...generateMetaRecordsFooter(mergedMeta));
   }
@@ -119,6 +143,7 @@ export const FragmentFactory = {
       .setContainerWithFooter(module, identifier)
       .setCallback('onRefresh', BUTTON_KEYS.REFRESH)
       .setCallback('onClose', BUTTON_KEYS.CLOSE)
+      .setCallback('onCollapse', BUTTON_KEYS.COLLAPSE)
     return fragment.element;
   },
   /**
