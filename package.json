@@ -3,7 +3,7 @@
   "version": "0.0.1",
   "description": "the monorepo wrapper, only for easier access, doesn't manage repositories",
   "scripts": {
-    "dev": "pnpm --filter @webook/weboratory run dev"
+    "dev": "pnpm --filter @webook/weboratory run dev --port 23456"
   },
   "keywords": [
     "monorepo"

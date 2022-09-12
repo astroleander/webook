@@ -84,6 +84,7 @@ importers:
       '@types/react': ^18.0.19
       '@types/react-dom': ^18.0.6
       '@types/react-native': ^0.69.5
+      '@webrary/common': workspace:^0.0.1
       classnames: ^2.3.1
       less: ^4.1.2
       react: ^18.1.0
@@ -98,6 +99,7 @@ importers:
       '@types/react': 18.0.19
       '@types/react-dom': 18.0.6
       '@types/react-native': 0.69.8
+      '@webrary/common': link:../common
       classnames: 2.3.1
       less: 4.1.2
       typescript: 4.6.4
