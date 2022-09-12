@@ -15,11 +15,13 @@ importers:
       '@vitejs/plugin-vue': ^2.3.1
       '@vue/compiler-sfc': ^3.2.33
       '@webrary/react': workspace:^0.0.1
+      '@webrary/rn': workspace:^0.0.1
       '@webrary/svelte': workspace:^0.0.1
       classnames: ^2.3.1
       less: ^4.1.2
       react: ^18.1.0
       react-dom: ^18.1.0
+      react-native-web: ^0.18.7
       svelte: ^3.48.0
       typescript: ^4.6.4
       vite: ^2.9.7
@@ -28,9 +30,11 @@ importers:
       vue-tsc: ^0.34.11
     dependencies:
       '@webrary/react': link:../webrary/react
+      '@webrary/rn': link:../webrary/rn
       '@webrary/svelte': link:../webrary/svelte
       react: 18.1.0
       react-dom: 18.1.0_react@18.1.0
+      react-native-web: 0.18.9_ef5jwxihqo6n7gxfmzogljlgcm
       svelte: 3.48.0
       vue: 3.2.33
     devDependencies:

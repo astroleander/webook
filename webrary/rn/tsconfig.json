@@ -3,7 +3,7 @@
     "baseUrl": ".",
     "paths": {
       "@/*": ["src/*"],
-      "react-native": ["react-native-Web"]
+      "@types/react-native-web": ["node_modules/@types/react-native"]
     },
     "allowJs": true,
     "allowSyntheticDefaultImports": true,

@@ -77,13 +77,18 @@ class Fragment {
     const loadComponent = async () => {
       console.log('[load component]', identifier);
       if (container) {
+        let [start_timestamp, end_timestamp] = [window?.performance.now(), 0];
         const moduleType = getModuleTypeFromIdentifier(identifier);
         const moduleManager = await ModuleManagerSelector[moduleType](module, container);
+        end_timestamp = window?.performance.now();
         this.mount = moduleManager.mount;
         this.unmount = moduleManager.unmount;
         this.mount();
 
-        this.setFooter(moduleManager.meta);
+        this.setFooter({
+          ...moduleManager.meta,
+          'load cost': (end_timestamp - start_timestamp).toFixed(2) + 'ms',
+        });
       } else {
         console.warn('[Template Parsing Warning] Didn\'t find main element in your template');
         return;

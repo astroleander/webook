@@ -5,6 +5,7 @@ import { WebookModuleManager } from './WebookModuleManager';
 export enum ModuleType {
   REACT_DOM = 'react-dom',
   REACT = 'react',
+  RN = 'rn',
   SVELTE = 'svelte',
   WEBOOK = 'webook',
 }
@@ -24,7 +25,12 @@ export const ModuleManagerSelector: Record<ModuleType, (m: any, parent: Element)
     return controller;
   },
   [ModuleType.REACT]: async (m, p) => {
-    const controller = new ReactModuleManager(m, p, ModuleType.REACT_DOM)
+    const controller = new ReactModuleManager(m, p, ModuleType.REACT)
+    await controller.loadModule();
+    return controller;
+  },
+  [ModuleType.RN]: async (m, p) => {
+    const controller = new ReactModuleManager(m, p, ModuleType.RN)
     await controller.loadModule();
     return controller;
   },
@@ -38,7 +44,7 @@ export const ModuleManagerSelector: Record<ModuleType, (m: any, parent: Element)
     const c = new WebookModuleManager(m, p, ModuleType.WEBOOK);
     await c.loadModule();
     return c;
-  }
+  },
 };
 
 export const getModuleTypeFromIdentifier = (identifier: string) => {

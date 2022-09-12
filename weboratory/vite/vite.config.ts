@@ -15,10 +15,12 @@ export default defineConfig({
   root: ROOT,
   define: {
     __BUILD__: JSON.stringify("vite"),
+    global: 'window' // for react-native-web
   },
   resolve: {
     alias: {
       // '@/': path.resolve('./src'),
+      'react-native': 'react-native-web', // ref https://github.com/vitejs/vite/discussions/8195#discussioncomment-3053838
     }
   },
   build: {

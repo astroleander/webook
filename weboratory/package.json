@@ -13,11 +13,13 @@
   },
   "dependencies": {
     "@webrary/react": "workspace:^0.0.1",
+    "@webrary/rn": "workspace:^0.0.1",
     "@webrary/svelte": "workspace:^0.0.1",
     "react": "^18.1.0",
     "react-dom": "^18.1.0",
-    "vue": "^3.2.33",
-    "svelte": "^3.48.0"
+    "react-native-web": "^0.18.7",
+    "svelte": "^3.48.0",
+    "vue": "^3.2.33"
   },
   "devDependencies": {
     "@sveltejs/vite-plugin-svelte": "1.0.0-next.45",
