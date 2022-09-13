@@ -7,7 +7,7 @@ const HEIGHT = 300;
 const TAB_HEIGHT = 50;
 export const CollapseTabsLayout = () => {
   const height = useRef(new Animated.Value(0));
-  const [seeOverflow, setSeeOverflow] = useState(true);
+  const [seeOverflow, setSeeOverflow] = useState(false);
   return (
     <>
       <span>seeOverflow:</span>
