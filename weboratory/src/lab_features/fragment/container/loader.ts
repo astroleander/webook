@@ -1,6 +1,7 @@
 import { ReactModuleManager } from './ReactModuleManager';
 import { SvelteModuleManager } from './SvelteModuleManager';
 import { WebookModuleManager } from './WebookModuleManager';
+import { RNModuleManager } from './RNModuleManager';
 
 export enum ModuleType {
   REACT_DOM = 'react-dom',
@@ -30,7 +31,7 @@ export const ModuleManagerSelector: Record<ModuleType, (m: any, parent: Element)
     return controller;
   },
   [ModuleType.RN]: async (m, p) => {
-    const controller = new ReactModuleManager(m, p, ModuleType.RN)
+    const controller = new RNModuleManager(m, p, ModuleType.RN)
     await controller.loadModule();
     return controller;
   },
