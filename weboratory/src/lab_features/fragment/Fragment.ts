@@ -13,6 +13,9 @@ type Module = any;
  *      |    |- buttons
  *      |- container: from loader
  *      |    |- module manager
+ *      |- footer: from loader
+ *           |- meta
+ *           |- load cost
  */
 class Fragment {
   element?: Element;
@@ -80,10 +83,10 @@ class Fragment {
         let [start_timestamp, end_timestamp] = [window?.performance.now(), 0];
         const moduleType = getModuleTypeFromIdentifier(identifier);
         const moduleManager = await ModuleManagerSelector[moduleType](module, container);
-        end_timestamp = window?.performance.now();
         this.mount = moduleManager.mount;
         this.unmount = moduleManager.unmount;
-        this.mount();
+        await this.mount();
+        end_timestamp = window?.performance.now();
 
         this.setFooter({
           ...moduleManager.meta,
@@ -124,7 +127,8 @@ class Fragment {
 export const FragmentFactory = {
   /**
    * Create Fragment with module file
-   * @param props 
+   * @param props
+   * @param identifier to identify module's type, name, category and path
    * @returns Fragment 
    */
   create: async (props: {
