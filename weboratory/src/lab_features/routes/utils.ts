@@ -1,14 +1,6 @@
 import { FragmentFactory } from "../fragment";
+import type { Route } from "./types";
 
-type Route = {
-  // functional
-  load: () => Promise<any>;
-  default_module: string;
-  // nav
-  nav: string[];
-  // extras
-  github_page_link?: string;
-}
 const repo_url = 'https://github.com/astroleander/webook/blob/main';
 
 export const renameRoutesWithDomain = (
@@ -18,10 +10,12 @@ export const renameRoutesWithDomain = (
 ) => {
   const renamed_routes = {} as Record<string, Route>;
   for (const key in routes) {
-    // unstable functions
-    // translate from dynamic import string compile generations
+    // extract path string from import expression
+    // e.g. `webrary/react/hooks/useTimer/index.tsx` from `import("./webook/webrary/react/hooks/useTimer/index.tsx")`
     const file_path = routes?.[key]?.toString()?.match(/import\(.*webook(.*)['|"]\)/)?.[1]
+    // create routes as Route[]
     renamed_routes[`${domain}.${key}`] = {
+      identifier: `${domain}.${key}`,
       load: routes[key],
       default_module: default_module,
       nav: [domain.split('.'), key].flat(1),
@@ -31,33 +25,39 @@ export const renameRoutesWithDomain = (
   return renamed_routes;
 }
 
-export const loadFragmentFromRoute = (props: {
-  identifier: string,
-  route: Route,
-  element: Element | null,
-}) => {
-  const { load, default_module, ...params } = props.route;
-  load().then(async module => {
-    const key = Object.keys(module)?.[0];
+export const loadFragmentFromRoute = async (route: Route) => {
+  const { load, default_module, identifier, ...params } = route;
+  try {
+    const module = await load();  
+    const key_of_first_child = Object.keys(module)?.[0];
     const fragment = await FragmentFactory.create({
-      module: module[default_module] || module[key],
-      identifier: props.identifier,
+      module: module[default_module] || module[key_of_first_child],
+      identifier: identifier,
       params: {
         github_page_link: params.github_page_link
       }
     });
-    fragment && props.element?.appendChild(fragment);
-    // TODO: seprecated create routes & route-view  
-  }).catch(async (err) => {
-    const fragment = await FragmentFactory.create({
-      identifier: `webook.error.${props.identifier}`,
+    return fragment;
+  } catch (err) {
+    const error_fragment = await FragmentFactory.create({
+      identifier: `webook.error.${identifier}`,
       module: {
         error: err,
-        module_name: props.identifier,
+        module_name: identifier,
       },
       params: {}
     });
-    fragment && props.element?.appendChild(fragment);
-  });
+    return error_fragment;
+  }
+}
 
+export const createRouterItem = (props: {
+  route: Route;
+  onSelected?: (route: Route) => void;
+}) => {
+  const li = document.createElement('li');
+  li.innerHTML = props.route.identifier;
+  li.onclick = (e) => props.onSelected?.(props.route);
+  li.setAttribute('identifier', props.route.identifier);
+  return li;
 }
