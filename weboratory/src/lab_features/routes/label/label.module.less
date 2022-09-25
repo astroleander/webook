@@ -1,0 +1,40 @@
+.basic {
+  padding: 2px 0.4em;
+  margin: 0 0.2em 0 0;
+  font-size: 0.8em;
+  &, * {
+    font-family: consolas, monospace;
+  }
+}
+
+.default {
+  &:extend(.basic);
+  color: #CCC;
+  background: #333;
+}
+
+
+.vue {
+  &:extend(.basic);
+  color: #42b773;
+  background: #35495e;
+}
+
+.rn {
+  &:extend(.basic);
+  padding: 2px 0.8em;
+  color: #F2F2F2;
+  background: #00CCF2;
+}
+
+.react {
+  &:extend(.basic);
+  color: #61DAFB;
+  background: #282C33;
+}
+
+.svelte {
+  &:extend(.basic);
+  color: #FFFFFF;
+  background: #FF3E00;
+}

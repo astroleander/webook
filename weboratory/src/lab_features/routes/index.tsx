@@ -2,9 +2,11 @@ import * as hooks_routes from '@webrary/react/hooks';
 import * as svelte_routes from '@webrary/svelte/common';
 import * as rn_routes from '@webrary/rn/components';
 
-import { createRouterItem, loadFragmentFromRoute, renameRoutesWithDomain } from './utils';
+import { loadFragmentFromRoute, renameRoutesWithDomain, splitRouteIdentifier } from './utils';
 import { Route } from './types';
 import { __log } from '../utils';
+import { LabelFactory } from './label/Label';
+import { subtle } from 'crypto';
 
 export { loadFragmentFromRoute }; 
 export const routes = {
@@ -14,9 +16,23 @@ export const routes = {
 };
 export type { Route };
 
+export const createRouteList = (props: {
+  route: Route;
+  onSelected?: (route: Route) => void;
+}) => {
+  const li = document.createElement('li');
+  li.setAttribute('identifier', props.route.identifier);
+  const {type, sub_type, name} = splitRouteIdentifier(props.route.identifier);
+  li.appendChild(LabelFactory.create(type));
+  sub_type && li.appendChild(LabelFactory.create(sub_type));
+  li.append(name || '');
+  li.onclick = (e) => props.onSelected?.(props.route);
+  return li;
+}
+
 export const initRouter = (props: {
   navElement: Element | null;
-  onRouterItemSelected?: (route: Route) => void;
+  onRouteItemSelected?: (route: Route) => void;
   onRouterLoaded?: (routes: HTMLElement[]) => void;
   __debug?: true;
 }) => {
@@ -27,9 +43,9 @@ export const initRouter = (props: {
   const routesList = [] as Array<HTMLElement>;
   // add items
   for (const identifier in routes) {
-    const routeItem = createRouterItem({
+    const routeItem = createRouteList({
       route: routes[identifier],
-      onSelected: props.onRouterItemSelected,
+      onSelected: props.onRouteItemSelected,
     });
     routesList.push(routeItem);
   }
@@ -37,3 +53,4 @@ export const initRouter = (props: {
   // load
   props.onRouterLoaded?.(routesList);
 };
+

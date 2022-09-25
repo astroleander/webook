@@ -51,13 +51,13 @@ export const loadFragmentFromRoute = async (route: Route) => {
   }
 }
 
-export const createRouterItem = (props: {
-  route: Route;
-  onSelected?: (route: Route) => void;
-}) => {
-  const li = document.createElement('li');
-  li.innerHTML = props.route.identifier;
-  li.onclick = (e) => props.onSelected?.(props.route);
-  li.setAttribute('identifier', props.route.identifier);
-  return li;
+export const splitRouteIdentifier = (identifier: string) => {
+  const parts = identifier.split('.');
+  return {
+    type: parts[0],
+    sub_type: parts.length - 1 === 1 ? undefined : parts[1],
+    name: parts.at(-1),
+    categories: parts,
+    raw: identifier,
+  }
 }
