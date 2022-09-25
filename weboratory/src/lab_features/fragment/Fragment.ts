@@ -124,6 +124,7 @@ class Fragment {
     return this;
   }
 }
+
 export const FragmentFactory = {
   /**
    * Create Fragment with module file

@@ -13,7 +13,7 @@ const [nav, main] = [
 initRouter({
   __debug: true,
   navElement: nav,
-  onRouterItemSelected: async (route: Route) => {
+  onRouteItemSelected: async (route: Route) => {
     const fragment = await loadFragmentFromRoute(route);
     fragment && main?.appendChild(fragment);
   },
