@@ -1,3 +1,4 @@
+import { PAGE_FOLDER } from '../shared.config';
 import { input_folders } from './utils';
 
 const printEntryPath = (FOLDER, SERVER) => {
@@ -8,7 +9,7 @@ const printEntryPath = (FOLDER, SERVER) => {
         console.table(
           Object.keys(FOLDER).map(page => ({
             page: page,
-            link: `http://localhost:${port}/${page}/`,
+            link: `http://localhost:${port}/${PAGE_FOLDER}/${page}/`,
           }))
         );
         clearInterval(utilPort);

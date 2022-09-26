@@ -23,6 +23,6 @@
     "metro.config.js",
     "jest.config.js"
   ],
-  "include": ["./*.ts", "./*.tsx", "*.d.ts", "./**/*.ts", "../types/*.d.ts"]
+  "include": ["./*.ts", "./*.tsx", "*.d.ts", "./**/*.ts"]
 }
 
