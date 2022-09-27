@@ -1,21 +1,17 @@
 import React, { useEffect, useRef } from 'react';
 import { RenderTimeWrapper } from '../utils/RenderTimeWrapper';
 
-const MatryoshkaProvider = ({ count, children }) => {
-  const Context = React.createContext({
-    random: Math.random(),
-    count: count,
-  });
+const Wrapper = ({ count, children }) => {
   if (count === 0) {
-    return <Context.Provider value={count}>
+    return <div>
       {children}
-    </Context.Provider>;
+    </div>;
   } else {
-    return (<MatryoshkaProvider count={count - 1}>
-      <Context.Provider value={count}>
+    return (<Wrapper count={count - 1}>
+      <div style={{background: '#F001'}}>
         {children}
-      </Context.Provider>
-    </MatryoshkaProvider>);
+      </div>
+    </Wrapper>);
   }
 }
 
@@ -24,6 +20,8 @@ const RealComponent = ({ }) => {
 }
 
 export const Sample = () => {
+  const inputRef = useRef();
+
   const timestamp = useRef(Date.now());
   return (<div style={{
     display: 'grid',
@@ -41,18 +39,18 @@ export const Sample = () => {
     <div>
       <div>300 provider wrappers:</div>
       <RenderTimeWrapper>
-        <MatryoshkaProvider count={300}>
+        <Wrapper count={300}>
           <RealComponent />
-        </MatryoshkaProvider>
+        </Wrapper>
       </RenderTimeWrapper>
     </div>
 
     <div>
       <div>500 provider wrappers:</div>
       <RenderTimeWrapper>
-        <MatryoshkaProvider count={500}>
+        <Wrapper count={500}>
           <RealComponent />
-        </MatryoshkaProvider>
+        </Wrapper>
       </RenderTimeWrapper>
     </div>
   </div>);
