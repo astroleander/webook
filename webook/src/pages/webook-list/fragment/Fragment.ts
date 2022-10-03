@@ -1,14 +1,15 @@
-import { StyleClassList } from './constant';
+import { LIFE_HOOKS, StyleClassList } from './constant';
 import { ModuleManagerSelector, getModuleTypeFromIdentifier } from './container/loader';
 import { generateMetaRecordsFooter } from './footer';
 import { BUTTON_KEYS, selectHeaderButton } from './header';
-import { mapKey } from './utils';
+import { loadTheme } from './styles/themeLoader';
+import { getMapkey } from './utils';
 
 type Module = any;
 /**
  * Fragment: structure from template
  *   |-functions
- *   |-element, the wrapper
+ *   |-wrapper <- DocumentFragment
  *      |- header: structure from template
  *      |    |- buttons
  *      |- container: from loader
@@ -26,36 +27,26 @@ class Fragment {
   mount: () => void = () => { };
   unmount: () => void = () => { };
   // callback events
-  onClose = () => {
-    this.unmount();
-    this.element?.remove();
-  };
-  onRefresh = () => {
-    this.unmount();
-    this.mount();
-  };
-  onCollapse = () => {
-    if (!this.collapsed) {
+  defaultCallback = {
+    onClose: () => {
       this.unmount();
-    } else {
+      this.element?.remove();
+    },
+    onRefresh: () => {
+      this.unmount();
       this.mount();
-    }
-    
-    this.collapsed = !this.collapsed;
-    // if (!this.collapsed) {
-    //   Array.from(this.element?.children || []).forEach((e) => {
-    //     if ((e as HTMLElement).style && e.tagName !== 'HEADER') {
-    //       (e as HTMLElement).style.display = 'gone';
-    //     }
-    //   })
-    // } else {
-    //   Array.from(this.element?.children || []).forEach((e) => {
-    //     if ((e as HTMLElement).style && e.tagName !== 'HEADER') {
-    //       (e as HTMLElement).style.visibility = 'collapse';
-    //     }
-    //   })
-    // }
+    },
+    onCollapse: () => {
+      if (!this.collapsed) {
+        this.unmount();
+      } else {
+        this.mount();
+      }
+      this.collapsed = !this.collapsed;
+    }  
   }
+  // callback hooks
+  onContainerLoaded: Function = () => {};
 
   constructor(node: Element) {
     this.element = node;
@@ -74,9 +65,8 @@ class Fragment {
     return this;
   }
 
-  setContainerWithFooter(module: Module, identifier: string) {
+  setContainer(module: Module, identifier: string) {
     const container = this.element?.querySelector('main');
-
     const loadComponent = async () => {
       console.log('[load component]', identifier);
       if (container) {
@@ -88,27 +78,33 @@ class Fragment {
         await this.mount();
         end_timestamp = window?.performance.now();
 
-        this.setFooter({
+        this.setMeta({
           ...moduleManager.meta,
-          'load cost': (end_timestamp - start_timestamp).toFixed(2) + 'ms',
+          'timestamp': (end_timestamp - start_timestamp).toFixed(2) + 'ms',
         });
       } else {
         console.warn('[Template Parsing Warning] Didn\'t find main element in your template');
         return;
       };
     };
-    loadComponent();
+    loadComponent().then(() => this.onContainerLoaded(this));
     return this;
   }
 
-  setCallback(cb_type: keyof Fragment, element_key: BUTTON_KEYS) {
-    if (this.element) {
-      const element = selectHeaderButton(this.element, element_key);
-      element && (element.onclick = (e) => {
-        (this[cb_type] as Function)?.();
-      });
-    } else {
-      console.warn('[Template Parsing Warning] Didn\'t find header element in your template, can\'t set callback');
+  setCallback(element_key: string, callback: Function) {
+    if (!this.element) { return this};
+    switch (element_key) {
+      case BUTTON_KEYS.CLOSE:
+      case BUTTON_KEYS.COLLAPSE:
+      case BUTTON_KEYS.REFRESH:
+        const button = selectHeaderButton(this.element, element_key);
+        button && (button.onclick = (e) => {
+          callback.call(this);
+        });
+        break;
+      case LIFE_HOOKS.ON_LOADED:
+        this.onContainerLoaded = callback;
+        break;
     }
     return this;
   }
@@ -117,10 +113,11 @@ class Fragment {
     const mergedMeta = Object.assign(addon || {}, this.meta);
     const footer = this.element?.querySelector('footer');
     footer?.append(...generateMetaRecordsFooter(mergedMeta));
+    return this;
   }
 
   setMeta(meta?: Record<string, string>) {
-    this.meta = meta ?? {};
+    this.meta = Object.assign(this.meta, meta || {});
     return this;
   }
 }
@@ -135,76 +132,74 @@ export const FragmentFactory = {
   create: async (props: {
     module: any,
     identifier: string,
-    wrapper_type?: string,
     params?: Record<string, any>
+    template_style_token?: string,
   }) => {
-    const { module, identifier, wrapper_type, params } = props;
-    // const { github_page_link } = params ?? {};
-    // [type, ...categories, name] = identifier
-    const [module_type, ...categories] = identifier.split('.');
-    const name = categories.pop();
-    const styled_template_id = FragmentFactory.getFragmentTemplateId(wrapper_type, module_type, name, categories);
-    const html_wrapper = await FragmentFactory.getFragmentWrapper(styled_template_id);
-    const html_header = await FragmentFactory.getFragmentHeader(styled_template_id);
+    const { module, identifier, template_style_token, params } = props;
+    const name = identifier.split('.').pop();
+    const wrapper = await FragmentTemplateLoader.loadWrapper();
+    const header = await FragmentTemplateLoader.loadHeader();
+    if (!header || !wrapper) return document.createElement('div');
 
-    const fragment = new Fragment(html_wrapper);
-    fragment.setHeader(html_header, name)
-      .setMeta(params)
-      .setContainerWithFooter(module, identifier)
-      .setCallback('onRefresh', BUTTON_KEYS.REFRESH)
-      .setCallback('onClose', BUTTON_KEYS.CLOSE)
-      .setCallback('onCollapse', BUTTON_KEYS.COLLAPSE)
+    const fragment = new Fragment(wrapper);
+
+    fragment.setHeader(header, name)
+      .setContainer(module, identifier)
+      .setCallback(LIFE_HOOKS.ON_LOADED, (f: Fragment) => f.setFooter(params))
+      .setCallback(BUTTON_KEYS.REFRESH, fragment.defaultCallback.onRefresh)
+      .setCallback(BUTTON_KEYS.CLOSE, fragment.defaultCallback.onClose)
+      .setCallback(BUTTON_KEYS.COLLAPSE, fragment.defaultCallback.onCollapse)
     return fragment.element;
   },
-  /**
-   * Load Wrapper DocumentFragment from './wrappers/templates'
-   * @returns {HTMLElement}
-   */
-  getFragmentWrapper: async (styled_template_id?: StyleClassList) => {
-    let templateFile = `basic`;
-    switch (styled_template_id) {
-      case StyleClassList.BASIC_ERROR:
-        templateFile = `basic.error`
-        break;
-    }
-    return await import(`./wrapper/templates/${templateFile}.html?raw`).then((templateRawString) => {
-      const node = document.createRange().createContextualFragment(templateRawString.default);
-      // wrapper only has one root element
-      return node.cloneNode(true).firstChild as Element;
-    });
-  },
+}
+
+type Loader = {
+  component_token: 'header' | 'footer' | 'wrapper';
+  template_token: string;
+  style_token: string;
+}
+
+const FragmentTemplateLoader = {
+  cache: new Map<string, DocumentFragment>(),
   /**
    * Load Header DocumentFragment from './header/templates'
    * @returns {HTMLElement}
    */
-  getFragmentHeader: async (styled_template_id?: StyleClassList) => {
-    let templateFile = `mac`;
-    switch (styled_template_id) {
-    }
-    return await import(`./header/templates/${templateFile}.html?raw`).then((templateRawString) => {
-      const node = document.createRange().createContextualFragment(templateRawString.default);
-      return node.cloneNode(true) as Element;
+  loadHeader: async (style?: string, template?: string) => {
+    return await FragmentTemplateLoader.loadTemplate({
+      component_token: 'header',
+      template_token: template ?? 'mac',
+      style_token: 'basic',
+    }) as Element;
+  },
+  loadWrapper: async (style?: string, template?: string) => {
+    const fragment =  await FragmentTemplateLoader.loadTemplate({
+      component_token: 'wrapper',
+      template_token: template ?? 'basic',
+      style_token: 'basic',
     });
-  },
-  /**
-   * @param wrapper_type the wrapper type defined by users manually
-   * @param module_type the route prefix, told the framework/tech types
-   * @param categories
-   */
-  getFragmentTemplateId: (wrapper_type: string | null | undefined, module_type: string, name: string | undefined, categories: string[]) => {
-    // TODO: wrapper_type priority
-    // const specific_categories_tags = categories.xx
-    if (module_type === 'webook') {
-      switch (categories?.[0]) {
-        case 'error':
-          return FragmentFactory.fragmentTemplateRules.get(mapKey(null, 'webook', 'error', null));
-      }
+    return fragment?.firstChild as Element;
+  },  
+  setCacheIfNotExists: (props: Loader, fragment: DocumentFragment) => {
+    const key = getMapkey(...Object.values(props));
+    if (!FragmentTemplateLoader.cache.has(key)) {
+      FragmentTemplateLoader.cache.set(key, fragment);
     }
-    // console.log(mapKey(wrapper_type, module_type, name, null));
-    return FragmentFactory.fragmentTemplateRules.get(mapKey(wrapper_type, module_type, name, null));
   },
-  fragmentTemplateRules: new Map([
-    [mapKey(null, 'webook', 'error', null), StyleClassList.BASIC_ERROR],
-  ])
-}
-
+  getCache: (props: Loader) => {
+    const key = getMapkey(...Object.values(props));
+    return FragmentTemplateLoader.cache.get(key);
+  },
+  loadTemplate: async (props: Loader) => {
+    try {
+      const htmlRaw = await import(`./${props.component_token}/templates/${props.template_token}.html?raw`);
+      const node = document.createRange().createContextualFragment(htmlRaw.default);
+      const element = (FragmentTemplateLoader.getCache(props) ?? node).cloneNode(true);
+      FragmentTemplateLoader.setCacheIfNotExists(props, node);
+      return element as Element;
+    } catch (err) {
+      return null;
+    }
+    // const template = document.createRange().createContextualFragment()
+  }
+}  

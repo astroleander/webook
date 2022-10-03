@@ -1,4 +1,4 @@
-import './index.less';
+import './styles/index.less';
 import './fragment/styles/index.less';
 
 import { initRouter, loadFragmentFromRoute } from './routes';

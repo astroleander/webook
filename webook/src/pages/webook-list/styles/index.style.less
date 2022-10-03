@@ -1,0 +1,50 @@
+// style
+body {
+  padding: 0;
+  margin: 0;
+}
+
+body > nav > li {
+  display: inline-block;
+  width: 100%;
+  cursor:pointer;
+  list-style: none;
+  overflow-wrap: break-word;
+}
+
+body > main {
+  height: 100vh;
+  overflow-y: auto;
+  & > * {
+    margin: 12px 4px; /* vertical/horizontal */
+  };
+}
+
+code {
+  font-family: consolas;
+}
+
+/* width */
+::-webkit-scrollbar {
+  height: 6px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  background: transparent; 
+}
+ 
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: #8881; 
+  border-radius: 2px;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: #5553; 
+}
+
+p {
+  margin: 0 0 0.25em 0;
+}
