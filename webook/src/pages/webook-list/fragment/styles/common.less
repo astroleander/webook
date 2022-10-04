@@ -1,0 +1,59 @@
+/* common styles for every template
+ * 1. won't dynamically loading
+ * 2. won't apply module hash
+ * 3. always apply
+ * 4. can be nested
+ */
+
+// sharing wrapper
+
+
+// sharing header
+
+
+// sharing container
+.fragment-container {
+  margin-top: 8px;
+}
+
+// sharing footer
+//  * footer temparily doesn't support template, styled here
+
+.fragment-wrapper > .fragment-footer {
+  min-height: 4px;
+  & > p {
+    width: fit-content;
+    display: inline-block;
+    margin-block-start: 0;
+    margin-block-end: 0;  
+    margin-inline-end: 16px;
+  }
+  .meta-key, .meta-value {
+    font-size: 12px;
+    height: fit-content;
+    font-style: italic;
+    opacity: 0.4;  
+  }
+  .meta-key {
+    margin-inline-end: 4px;
+    & img {
+      height: 20px;
+      width: 20px;
+      vertical-align: text-bottom;
+    }
+  }
+  .meta-value {
+
+  }
+
+}
+
+// ------------------------------- basic.error ---------------------
+.fragment-wrapper.error {
+  background-color:  #fff0f4 !important;
+  color: #c51244;
+  & > .fragment-container code {
+    display: block;
+    overflow-x: auto;
+  }
+}

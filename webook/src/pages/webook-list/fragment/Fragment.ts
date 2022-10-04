@@ -2,7 +2,7 @@ import { LIFE_HOOKS, StyleClassList } from './constant';
 import { ModuleManagerSelector, getModuleTypeFromIdentifier } from './container/loader';
 import { generateMetaRecordsFooter } from './footer';
 import { BUTTON_KEYS, selectHeaderButton } from './header';
-import { loadTheme } from './styles/themeLoader';
+import { recursiveLoadTheme } from './themes/themeLoader';
 import { effects, getMapkey } from './utils';
 
 type Module = any;
@@ -142,8 +142,8 @@ export const FragmentFactory = {
 
     const { module, identifier, template_style_token, params } = props;
     const name = identifier.split('.').pop();
-    const wrapper = await FragmentTemplateLoader.loadWrapper();
-    const header = await FragmentTemplateLoader.loadHeader();
+    const wrapper = await FragmentTemplateLoader.loadWrapper('basic');
+    const header = await FragmentTemplateLoader.loadHeader('basic');
     if (!header || !wrapper) return document.createElement('div');
 
     const templateLoaded = recordTimestamp();
@@ -169,7 +169,7 @@ export const FragmentFactory = {
 type Loader = {
   component_token: 'header' | 'footer' | 'wrapper';
   template_token: string;
-  style_token: string;
+  theme_token: string;
 }
 
 const FragmentTemplateLoader = {
@@ -178,19 +178,22 @@ const FragmentTemplateLoader = {
    * Load Header DocumentFragment from './header/templates'
    * @returns {HTMLElement}
    */
-  loadHeader: async (style?: string, template?: string) => {
-    return await FragmentTemplateLoader.loadTemplate({
+  loadHeader: async (theme_token?: string, template_token?: string) => {
+    const fragment = await FragmentTemplateLoader.loadTemplate({
       component_token: 'header',
-      template_token: template ?? 'mac',
-      style_token: 'basic',
-    }) as Element;
+      template_token: template_token ?? 'mac',
+      theme_token: theme_token ?? 'basic',
+    });
+    await recursiveLoadTheme(fragment, theme_token);
+    return fragment;
   },
-  loadWrapper: async (style?: string, template?: string) => {
+  loadWrapper: async (theme_token?: string, template?: string) => {
     const fragment =  await FragmentTemplateLoader.loadTemplate({
       component_token: 'wrapper',
       template_token: template ?? 'basic',
-      style_token: 'basic',
+      theme_token: theme_token ?? 'basic',
     });
+    await recursiveLoadTheme(fragment, theme_token);
     return fragment?.firstChild as Element;
   },  
   setCacheIfNotExists: (props: Loader, fragment: DocumentFragment) => {
@@ -205,7 +208,7 @@ const FragmentTemplateLoader = {
   },
   loadTemplate: async (props: Loader) => {
     try {
-      const htmlRaw = await import(`./${props.component_token}/templates/${props.template_token}.html?raw`);
+      const htmlRaw = await import(`./templates/${props.component_token}/${props.template_token}.html?raw`);
       const node = document.createRange().createContextualFragment(htmlRaw.default);
       const element = (FragmentTemplateLoader.getCache(props) ?? node).cloneNode(true);
       FragmentTemplateLoader.setCacheIfNotExists(props, node);
