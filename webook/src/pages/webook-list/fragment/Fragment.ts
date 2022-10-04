@@ -3,7 +3,7 @@ import { ModuleManagerSelector, getModuleTypeFromIdentifier } from './container/
 import { generateMetaRecordsFooter } from './footer';
 import { BUTTON_KEYS, selectHeaderButton } from './header';
 import { loadTheme } from './styles/themeLoader';
-import { getMapkey } from './utils';
+import { effects, getMapkey } from './utils';
 
 type Module = any;
 /**
@@ -70,17 +70,15 @@ class Fragment {
     const loadComponent = async () => {
       console.log('[load component]', identifier);
       if (container) {
-        let [start_timestamp, end_timestamp] = [window?.performance.now(), 0];
+        const recordTimestamp = effects.recordTimestamp();
         const moduleType = getModuleTypeFromIdentifier(identifier);
         const moduleManager = await ModuleManagerSelector[moduleType](module, container);
         this.mount = moduleManager.mount;
         this.unmount = moduleManager.unmount;
         await this.mount();
-        end_timestamp = window?.performance.now();
-
         this.setMeta({
+          'timestamp(ts)': recordTimestamp(),
           ...moduleManager.meta,
-          'timestamp': (end_timestamp - start_timestamp).toFixed(2) + 'ms',
         });
       } else {
         console.warn('[Template Parsing Warning] Didn\'t find main element in your template');
@@ -123,6 +121,11 @@ class Fragment {
 }
 
 export const FragmentFactory = {
+  createEffects: () => {
+    return {
+      recordTimestamp: effects.recordTimestamp()
+    }
+  },
   /**
    * Create Fragment with module file
    * @param props
@@ -135,17 +138,27 @@ export const FragmentFactory = {
     params?: Record<string, any>
     template_style_token?: string,
   }) => {
+    const { recordTimestamp } = FragmentFactory.createEffects();
+
     const { module, identifier, template_style_token, params } = props;
     const name = identifier.split('.').pop();
     const wrapper = await FragmentTemplateLoader.loadWrapper();
     const header = await FragmentTemplateLoader.loadHeader();
     if (!header || !wrapper) return document.createElement('div');
 
+    const templateLoaded = recordTimestamp();
+
     const fragment = new Fragment(wrapper);
 
     fragment.setHeader(header, name)
       .setContainer(module, identifier)
-      .setCallback(LIFE_HOOKS.ON_LOADED, (f: Fragment) => f.setFooter(params))
+      .setCallback(LIFE_HOOKS.ON_LOADED, (f: Fragment) => {
+        f.setFooter({
+          ...params,
+          'timestamp(all)': recordTimestamp(),
+          'timestamp(html)': templateLoaded,
+        });
+      })
       .setCallback(BUTTON_KEYS.REFRESH, fragment.defaultCallback.onRefresh)
       .setCallback(BUTTON_KEYS.CLOSE, fragment.defaultCallback.onClose)
       .setCallback(BUTTON_KEYS.COLLAPSE, fragment.defaultCallback.onCollapse)
