@@ -8,7 +8,7 @@ const Wrapper = ({ count, children }) => {
     </div>;
   } else {
     return (<Wrapper count={count - 1}>
-      <div style={{background: '#F001'}}>
+      <div style={{background: `hsl(${count} 80% 60%)`, padding: 0.1}}>
         {children}
       </div>
     </Wrapper>);
@@ -20,12 +20,11 @@ const RealComponent = ({ }) => {
 }
 
 export const Sample = () => {
-  const inputRef = useRef();
-
-  const timestamp = useRef(Date.now());
   return (<div style={{
     display: 'grid',
-    gridTemplateColumns: '1fr 1fr 1fr',
+    gridTemplateColumns: 'repeat(auto-fit, minmax(100px, 1fr))',
+    width: '100%',
+    overflow: 'scroll',
     gap: '1em',
   }}>
     <div>

@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import React from 'react';
 import { RenderTimeWrapper } from '../utils/RenderTimeWrapper';
 
 const MatryoshkaProvider = ({ count, children }) => {
@@ -24,7 +24,6 @@ const RealComponent = ({ }) => {
 }
 
 export const Sample = () => {
-  const timestamp = useRef(Date.now());
   return (<div style={{
     display: 'grid',
     gridTemplateColumns: '1fr 1fr 1fr',
