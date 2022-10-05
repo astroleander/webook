@@ -1,3 +1,4 @@
+import { webook } from '../global';
 import { LIFE_HOOKS, StyleClassList } from './constant';
 import { ModuleManagerSelector, getModuleTypeFromIdentifier } from './container/loader';
 import { generateMetaRecordsFooter } from './footer';
@@ -141,9 +142,12 @@ export const FragmentFactory = {
     const { recordTimestamp } = FragmentFactory.createEffects();
 
     const { module, identifier, template_style_token, params } = props;
+    const { theme, template } = webook.fragment;
+    console.log(theme)
+
     const name = identifier.split('.').pop();
-    const wrapper = await FragmentTemplateLoader.loadWrapper('basic');
-    const header = await FragmentTemplateLoader.loadHeader('basic');
+    const wrapper = await FragmentTemplateLoader.loadWrapper(theme, template.wrapper);
+    const header = await FragmentTemplateLoader.loadHeader(theme, template.header);
     if (!header || !wrapper) return document.createElement('div');
 
     const templateLoaded = recordTimestamp();

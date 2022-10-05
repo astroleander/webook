@@ -1,0 +1,47 @@
+.fragment-wrapper {
+  height: auto;
+  min-width: inherit;
+  padding: 4px 6px 2px 6px;
+  /* margin: 24px 48px; */
+  border-radius: 5px;
+  font-size: 14px;
+  line-height: 133%;
+  font-variant-ligatures: contextual;
+  font-feature-settings: "calt";
+  user-select: none;
+  /* font-family: Hack, monospace; */
+  background: #212121CC;
+}
+
+.fragment-header {
+  padding-bottom: 2px;
+}
+
+.button {
+  vertical-align: middle;
+}
+
+.button:hover {
+  filter: brightness(0.95);
+}
+
+.button:active {
+  filter: brightness(0.65);
+}
+
+.title {
+  font-size: 14px;
+  margin-left: 8px;
+  font-weight: bold;
+  font-family: DinkieBitmap9px, Consolas, "Source Code Pro", monospace;
+  letter-spacing: .08ch;
+  color: #f8f8f8;
+}
+
+.fragment-container {
+  margin-top: 8px;
+}
+
+.fragment-footer {
+
+}
