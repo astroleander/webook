@@ -10,7 +10,7 @@
   font-feature-settings: "calt";
   user-select: none;
   /* font-family: Hack, monospace; */
-  background: #212121CC;
+  background: #343434;
 }
 
 .fragment-header {
@@ -42,6 +42,11 @@
   margin-top: 8px;
 }
 
+.fragment-container {
+  color: #EEEEEE;
+}
+
 .fragment-footer {
+  color: #EEEEEE;
 
 }

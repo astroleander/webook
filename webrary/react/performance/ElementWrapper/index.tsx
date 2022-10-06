@@ -24,7 +24,6 @@ export const Sample = () => {
     display: 'grid',
     gridTemplateColumns: 'repeat(auto-fit, minmax(100px, 1fr))',
     width: '100%',
-    overflow: 'scroll',
     gap: '1em',
   }}>
     <div>

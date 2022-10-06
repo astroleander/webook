@@ -5,6 +5,7 @@ import { initRouter, loadFragmentFromRoute } from './routes';
 import type { Route } from './routes';
 
 import { initMenu } from './menu';
+import { rudeDarkMode } from './utils';
 
 const DEBUG = true;
 
@@ -34,3 +35,5 @@ initMenu({
   __debug: DEBUG,
   menuElement: menu,
 });
+
+rudeDarkMode();

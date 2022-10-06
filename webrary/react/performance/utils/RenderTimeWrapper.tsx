@@ -52,7 +52,7 @@ const Output = (props: {
 const styles: Record<string, React.CSSProperties> = {
   wrapper: {
     boxSizing: 'border-box',
-    background: '#EEEE',
+    background: '#B3B3B344',
     borderRadius: 4,
     padding: 12,
     margin: 4,

@@ -15,19 +15,20 @@ export const initMenu = (props: {
         (v) => {
           // @ts-ignore assert that
           webook.fragment.template[part] = v
-        });
+          // @ts-ignore assert that
+        }, webook.fragment.template[part]);
       props.menuElement?.appendChild(selector);
     }
   });
   collectTheme().then((themes) => {
     const selector = createSelector(themes, 'theme', (v) => {
       webook.fragment.theme = v;
-    });
+    }, webook.fragment.theme);
     props.menuElement?.appendChild(selector);
   });
 };
 
-const createSelector = (options: Array<any>, name: string, onchange: (v: string) => void) => {
+const createSelector = (options: Array<any>, name: string, onchange: (v: string) => void, selected: string) => {
   const wrapper = document.createElement('div');
   wrapper.className = `selector-${name}`;
 
@@ -47,6 +48,7 @@ const createSelector = (options: Array<any>, name: string, onchange: (v: string)
       onchange(v);
     }
   }
+  selectElement.selectedIndex = options.findIndex(o => o === selected);
   wrapper.appendChild(labelElement);
   wrapper.appendChild(selectElement);
   return wrapper;
