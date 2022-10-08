@@ -12,9 +12,10 @@
     "serve": "vite preview --config vite/vite.config.ts"
   },
   "dependencies": {
-    "@webrary/react": "workspace:^0.0.1",
-    "@webrary/rn": "workspace:^0.0.1",
-    "@webrary/svelte": "workspace:^0.0.1",
+    "@webrary/react": "workspace:^",
+    "@webrary/rn": "workspace:^",
+    "@webrary/svelte": "workspace:^",
+    "@webrary/vue": "workspace:^",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-native-web": "^0.18.9",
@@ -29,8 +30,6 @@
     "@vitejs/plugin-react": "^2.1.0",
     "@vitejs/plugin-vue": "^3.1.0",
     "@vue/compiler-sfc": "^3.2.39",
-    "classnames": "^2.3.2",
-    "less": "^4.1.3",
     "typescript": "^4.8.3",
     "vite": "^3.1.3",
     "vite-plugin-mpa": "^1.1.4",

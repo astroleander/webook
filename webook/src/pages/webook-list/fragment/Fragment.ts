@@ -143,7 +143,6 @@ export const FragmentFactory = {
 
     const { module, identifier, template_style_token, params } = props;
     const { theme, template } = webook.fragment;
-    console.log(theme)
 
     const name = identifier.split('.').pop();
     const wrapper = await FragmentTemplateLoader.loadWrapper(theme, template.wrapper);

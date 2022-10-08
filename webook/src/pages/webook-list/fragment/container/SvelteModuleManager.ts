@@ -43,7 +43,7 @@ export class SvelteModuleManager implements ModuleManager {
     };
   }
 
-  updatModule = this.loadModule
+  updateModule = this.loadModule
 
   set type(_v: string) {
     console.warn('Can\'t set type once initialized')

@@ -2,6 +2,7 @@ import { ReactModuleManager } from './ReactModuleManager';
 import { SvelteModuleManager } from './SvelteModuleManager';
 import { WebookModuleManager } from './WebookModuleManager';
 import { RNModuleManager } from './RNModuleManager';
+import { VueModuleManager } from './VueModuleManager';
 
 export enum ModuleType {
   REACT_DOM = 'react-dom',
@@ -9,12 +10,13 @@ export enum ModuleType {
   RN = 'rn',
   SVELTE = 'svelte',
   WEBOOK = 'webook',
+  VUE = 'vue',
 }
 
 export interface ModuleManager {
   type: ModuleType[keyof ModuleType];
   module: any;
-  meta: Record<string, string>;
+  meta?: Record<string, string>;
   mount: () => void;
   unmount: () => void;
 }
@@ -43,6 +45,11 @@ export const ModuleManagerSelector: Record<ModuleType, (m: any, parent: Element)
   // internal type
   [ModuleType.WEBOOK]: async (m, p) => {
     const c = new WebookModuleManager(m, p, ModuleType.WEBOOK);
+    await c.loadModule();
+    return c;
+  },
+  [ModuleType.VUE]: async (m, p) => {
+    const c = new VueModuleManager(m, p, ModuleType.VUE);
     await c.loadModule();
     return c;
   },
