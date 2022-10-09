@@ -1,0 +1,16 @@
+{
+  "name": "@webrary/solid",
+  "version": "0.0.1",
+  "description": "the common powers for solid thing",
+  "main": "index.js",
+  "author": "astrexile",
+  "license": "MIT",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "dependencies": {
+    "@webrary/common": "workspace:*",
+    "solid-js": "^1.5.7"
+  }
+}

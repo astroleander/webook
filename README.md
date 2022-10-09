@@ -6,7 +6,7 @@ webook # root
   |- webrary    # exposed interface for everything common/general
   |    |-
   |   
-  |- weboratory # playground
+  |- webook # playground
   |  # files
   |- README.md  # hello github
 ```

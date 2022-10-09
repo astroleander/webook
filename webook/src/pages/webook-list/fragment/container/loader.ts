@@ -3,6 +3,7 @@ import { SvelteModuleManager } from './SvelteModuleManager';
 import { WebookModuleManager } from './WebookModuleManager';
 import { RNModuleManager } from './RNModuleManager';
 import { VueModuleManager } from './VueModuleManager';
+import { SolidModuleManager } from './SolidModuleManager';
 
 export enum ModuleType {
   REACT_DOM = 'react-dom',
@@ -11,6 +12,7 @@ export enum ModuleType {
   SVELTE = 'svelte',
   WEBOOK = 'webook',
   VUE = 'vue',
+  SOLID = 'solid',
 }
 
 export interface ModuleManager {
@@ -50,6 +52,11 @@ export const ModuleManagerSelector: Record<ModuleType, (m: any, parent: Element)
   },
   [ModuleType.VUE]: async (m, p) => {
     const c = new VueModuleManager(m, p, ModuleType.VUE);
+    await c.loadModule();
+    return c;
+  },
+  [ModuleType.SOLID]: async (m, p) => {
+    const c = new SolidModuleManager(m, p, ModuleType.SOLID);
     await c.loadModule();
     return c;
   },
