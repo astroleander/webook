@@ -11,6 +11,10 @@ import { input_folders } from './utils';
 import { OUT_DIR, ROOT } from '../shared.config';
 import { svelte } from '@sveltejs/vite-plugin-svelte';
 
+
+// blocked by https://github.com/vitejs/vite/issues/6921
+// blocked by https://github.com/vitejs/vite/pull/6202
+
 // https://vitejs.dev/config/
 export default defineConfig({
   root: ROOT,
@@ -39,9 +43,9 @@ export default defineConfig({
     svelte(),
     // tsx
     react({
-      // not working yet
-      include: '**/*.tsx',
-      exclude: /solid/,
+      babel: {
+        configFile: true,
+      }
     }),
     solid({
       // temprary solution util I can make plugin-react.exclude working
