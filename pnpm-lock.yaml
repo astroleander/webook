@@ -39,6 +39,7 @@ importers:
       vite: ^3.1.3
       vite-plugin-mpa: ^1.1.4
       vite-plugin-solid: ^2.3.9
+      vite-plugin-solid-with-excludes: ^2.3.9
       vue: ^3.2.39
       vue-tsc: ^0.40.13
     dependencies:
@@ -65,6 +66,7 @@ importers:
       vite: 3.1.3
       vite-plugin-mpa: 1.1.4
       vite-plugin-solid: 2.3.9_solid-js@1.5.7+vite@3.1.3
+      vite-plugin-solid-with-excludes: 2.3.9_solid-js@1.5.7+vite@3.1.3
       vue-tsc: 0.40.13_typescript@4.8.3
 
   webrary/common:
@@ -758,7 +760,6 @@ packages:
     dependencies:
       '@vue/reactivity': 3.2.39
       '@vue/shared': 3.2.39
-    dev: false
 
   /@vue/runtime-dom/3.2.39:
     resolution: {integrity: sha512-4G9AEJP+sLhsqf5wXcyKVWQKUhI+iWfy0hWQgea+CpaTD7BR0KdQzvoQdZhwCY6B3oleSyNLkLAQwm0ya/wNoA==}
@@ -766,7 +767,6 @@ packages:
       '@vue/runtime-core': 3.2.39
       '@vue/shared': 3.2.39
       csstype: 2.6.21
-    dev: false
 
   /@vue/server-renderer/3.2.39_vue@3.2.39:
     resolution: {integrity: sha512-1yn9u2YBQWIgytFMjz4f/t0j43awKytTGVptfd3FtBk76t1pd8mxbek0G/DrnjJhd2V7mSTb5qgnxMYt8Z5iSQ==}
@@ -776,7 +776,6 @@ packages:
       '@vue/compiler-ssr': 3.2.39
       '@vue/shared': 3.2.39
       vue: 3.2.39
-    dev: false
 
   /@vue/shared/3.2.38:
     resolution: {integrity: sha512-dTyhTIRmGXBjxJE+skC8tTWCGLCVc4wQgRRLt8+O9p5ewBAjoBwtCAkLPrtToSr1xltoe3st21Pv953aOZ7alg==}
@@ -942,7 +941,6 @@ packages:
 
   /csstype/2.6.21:
     resolution: {integrity: sha512-Z1PhmomIfypOpoMjRQB70jfvy/wxT50qW08YXO5lMIJkrdq4yOTR+AW7FqutScmB9NkLwxo+jU+kZLbofZZq/w==}
-    dev: false
 
   /csstype/3.1.1:
     resolution: {integrity: sha512-DJR/VvkAvSZW9bTouZue2sSxDwdTN92uHjqeKVm+0dAqdfNykRzQ95tay8aXMBAAPpUiq4Qcug2L7neoRh2Egw==}
@@ -1708,7 +1706,6 @@ packages:
     resolution: {integrity: sha512-L1UuyMuZZARAwzXo5NZDhE6yxc14aqNbVOUoGzvlcxRZo1Cm4ExhPV0diEfwDyiKG/igqNNLkNurHkXiI5sVEg==}
     dependencies:
       csstype: 3.1.1
-    dev: false
 
   /solid-refresh/0.4.1_solid-js@1.5.7:
     resolution: {integrity: sha512-v3tD/OXQcUyXLrWjPW1dXZyeWwP7/+GQNs8YTL09GBq+5FguA6IejJWUvJDrLIA4M0ho9/5zK2e9n+uy+4488g==}
@@ -1822,6 +1819,23 @@ packages:
       yargs: 16.2.0
     dev: true
 
+  /vite-plugin-solid-with-excludes/2.3.9_solid-js@1.5.7+vite@3.1.3:
+    resolution: {integrity: sha512-Bg+avLQ/JSlCbnu0lTzPZv5zsOLTR9OHjv/lWSIVuUgseh3sKpjvdz/zs404Q8r9giBhoWTCe6b5HLGllkkAaQ==}
+    peerDependencies:
+      solid-js: ^1.3.17
+      vite: ^3.0.0
+    dependencies:
+      '@babel/core': 7.19.1
+      '@babel/preset-typescript': 7.18.6_@babel+core@7.19.1
+      babel-preset-solid: 1.5.7_@babel+core@7.19.1
+      merge-anything: 5.0.4
+      solid-js: 1.5.7
+      solid-refresh: 0.4.1_solid-js@1.5.7
+      vite: 3.1.3
+    transitivePeerDependencies:
+      - supports-color
+    dev: true
+
   /vite-plugin-solid/2.3.9_solid-js@1.5.7+vite@3.1.3:
     resolution: {integrity: sha512-+lprsYgt9DVNp0kbDj2d2HWAPI13L8ff5xslk9SjiPBcsY/YUZ/1Wj0J/Oj5aiVAhwfPm8IcM3bzyHJUPlmc8w==}
     peerDependencies:
@@ -1913,7 +1927,6 @@ packages:
       '@vue/runtime-dom': 3.2.39
       '@vue/server-renderer': 3.2.39_vue@3.2.39
       '@vue/shared': 3.2.39
-    dev: false
 
   /webidl-conversions/3.0.1:
     resolution: {integrity: sha512-2JAn3z8AR6rjK8Sm8orRC0h/bcl/DqL7tRPdGZ4I1CjdF+EaMLmYxBHyXuKL849eucPFhvBoxMsflfOb8kxaeQ==}

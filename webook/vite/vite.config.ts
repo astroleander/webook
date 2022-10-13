@@ -2,7 +2,7 @@ import { defineConfig } from 'vite';
 // plugins - lib
 import react from '@vitejs/plugin-react';
 import vue from '@vitejs/plugin-vue';
-import solid from 'vite-plugin-solid';
+import solid from 'vite-plugin-solid-with-excludes';
 // plugins - custom
 import { consolePathsPrintPlugin } from './plugins';
 // system
@@ -42,15 +42,11 @@ export default defineConfig({
     vue(),
     svelte(),
     // tsx
-    react({
-      babel: {
-        configFile: true,
-      }
-    }),
     solid({
-      // temprary solution util I can make plugin-react.exclude working
-      extensions: ['.solid'],
+      includes: ['.solid.tsx', 'solid.jsx'],
+      esbuild: false,
     }),
+    react(),
     // custom
     consolePathsPrintPlugin(),
   ],
