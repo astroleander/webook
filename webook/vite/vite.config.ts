@@ -1,7 +1,8 @@
 import { defineConfig } from 'vite';
 // plugins - lib
 import react from '@vitejs/plugin-react';
-import vue from '@vitejs/plugin-vue'
+import vue from '@vitejs/plugin-vue';
+import solid from 'vite-plugin-solid-with-excludes';
 // plugins - custom
 import { consolePathsPrintPlugin } from './plugins';
 // system
@@ -9,6 +10,10 @@ import { consolePathsPrintPlugin } from './plugins';
 import { input_folders } from './utils';
 import { OUT_DIR, ROOT } from '../shared.config';
 import { svelte } from '@sveltejs/vite-plugin-svelte';
+
+
+// blocked by https://github.com/vitejs/vite/issues/6921
+// blocked by https://github.com/vitejs/vite/pull/6202
 
 // https://vitejs.dev/config/
 export default defineConfig({
@@ -33,9 +38,16 @@ export default defineConfig({
     }
   },
   plugins: [
-    svelte({}),
-    react(),
+    // templates
     vue(),
+    svelte(),
+    // tsx
+    solid({
+      includes: ['.solid.tsx', 'solid.jsx'],
+      esbuild: false,
+    }),
+    react(),
+    // custom
     consolePathsPrintPlugin(),
   ],
   server: {
