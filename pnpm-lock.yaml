@@ -16,7 +16,7 @@ importers:
       typescript: 4.8.3
       vite: 3.1.3_less@4.1.3
 
-  webook:
+  packages/webook:
     specifiers:
       '@sveltejs/vite-plugin-svelte': 1.0.5
       '@types/node': ^18.7.21
@@ -69,10 +69,10 @@ importers:
       vite-plugin-solid-with-excludes: 2.3.9_solid-js@1.5.7+vite@3.1.3
       vue-tsc: 0.40.13_typescript@4.8.3
 
-  webrary/common:
+  packages/webrary/common:
     specifiers: {}
 
-  webrary/react:
+  packages/webrary/react:
     specifiers:
       '@types/react': ^18.0.21
       '@types/react-dom': ^18.0.6
@@ -87,7 +87,7 @@ importers:
       '@types/react': 18.0.21
       '@types/react-dom': 18.0.6
 
-  webrary/rn:
+  packages/webrary/rn:
     specifiers:
       '@types/lodash': ^4.14.185
       '@types/react': ^18.0.21
@@ -110,7 +110,7 @@ importers:
       '@types/react-native': 0.69.12
       '@webrary/common': link:../common
 
-  webrary/solid:
+  packages/webrary/solid:
     specifiers:
       '@webrary/common': workspace:*
       solid-js: ^1.5.7
@@ -118,7 +118,7 @@ importers:
       '@webrary/common': link:../common
       solid-js: 1.5.7
 
-  webrary/svelte:
+  packages/webrary/svelte:
     specifiers:
       '@tsconfig/svelte': ^3.0.0
       svelte: ^3.50.1
@@ -126,7 +126,7 @@ importers:
       '@tsconfig/svelte': 3.0.0
       svelte: 3.50.1
 
-  webrary/vue:
+  packages/webrary/vue:
     specifiers:
       '@vue/compiler-sfc': ^3.2.39
       '@webrary/common': workspace:^0.0.1
