@@ -4,7 +4,7 @@
  * @param props the original build tool routes
  */
 export const getRoutesBasedBuildTool = (props: {
-  vite: any;
+  vite: Record<string, () => Promise<any>>;
 }) => {
   if (__BUILD__ === 'vite') {
     return Object.fromEntries(Object.entries(props.vite).map(([key, value]) => [keySimplifer(key), value]));

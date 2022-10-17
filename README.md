@@ -1,17 +1,20 @@
-# Category
+# Webook
+## Category
 
 ```
 webook # root
   |  # folder
-  |- webrary    # exposed interface for everything common/general
-  |    |-
+  |- packages/webrary    # everything common/general from a framework
+  |    |- react / rn / vue / svelte / 
   |   
-  |- webook # playground
+  |- packages/webook # playground
+  |
   |  # files
   |- README.md  # hello github
+  |
 ```
 
-# Commit Log 
+## Commit Log 
 | TAGS  |   |
 |---|---|
 | [⚙️maintain]  | system/configs/framework update |
@@ -22,15 +25,19 @@ webook # root
 | [🌟upgrade]   | add new features                |
 | [🧻chore]     | little things                   | 
 
-# PNpM
+## Features
+
+Webook Pages = @webook/webook/general page template + @webook/**/pages ts/js module
+## PNpM
 
 PNpM is best way to monorepo project 
 
-# monorepo
+## monorepo
 
-# dynamic and its price
+## dynamic and its price
 
-# todo
+
+## todo
 
 - `react` useDraggeable
 - `react` useInputField
