@@ -17,6 +17,7 @@
     "@webrary/solid": "workspace:^",
     "@webrary/svelte": "workspace:^",
     "@webrary/vue": "workspace:^",
+    "@webook/graphics": "workspace:^",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-native-web": "^0.18.9",

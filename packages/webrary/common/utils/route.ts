@@ -1,4 +1,5 @@
 // import.meta.glob will parse when build, can only inject it from target file;
+
 /**
  * Common routes generators
  * @param props the original build tool routes
@@ -6,6 +7,7 @@
 export const getRoutesBasedBuildTool = (props: {
   vite: Record<string, () => Promise<any>>;
 }) => {
+  // @ts-ignore global
   if (__BUILD__ === 'vite') {
     return Object.fromEntries(Object.entries(props.vite).map(([key, value]) => [keySimplifer(key), value]));
   }

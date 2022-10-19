@@ -27,7 +27,10 @@ webook # root
 
 ## Features
 
+```
 Webook Pages = @webook/webook/general page template + @webook/**/pages ts/js module
+```
+
 ## PNpM
 
 PNpM is best way to monorepo project 

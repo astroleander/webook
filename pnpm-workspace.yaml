@@ -1,5 +1,6 @@
 packages:
   - '.' # the root 'package.json'
-  - 'packages/webook' # 'webook/package.json'
-  - 'packages/webrary/**' # 'any package.json under webrary/'
+  - 'packages/webook'      # 'webook/package.json'
+  - 'packages/webrary/**'  # 'any package.json under webrary/'
+  - 'packages/graphics' # 'webgraphics/package.json'
 # @see https://pnpm.io/zh/pnpm-workspace_yaml
