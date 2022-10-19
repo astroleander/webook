@@ -1,8 +1,9 @@
 import { FragmentFactory } from "../fragment";
-import type { RouterItem } from "./types";
+import type { ModuleLoader, ModuleParser, RouterItem } from "./types";
 
 export const loadFragmentFromRouter = async (router: RouterItem) => {
-  const { load, default_module, identifier, ...params } = router;
+  // TODO: add default module setter
+  const { load, default_module , identifier, ...params } = router;
   try {
     const module = await load();  
     const key_of_first_child = Object.keys(module)?.[0];
@@ -36,4 +37,26 @@ export const splitRouteIdentifier = (identifier: string) => {
     categories: parts,
     raw: identifier,
   }
+}
+export const ParserBuilder: Record<string, ((x: any) => ModuleParser)> = {
+  setPrefix: (prefix: string) => function(moduleId, module) {
+    return {
+      moduleId: `${prefix}.${moduleId}`,
+      module: module,
+    }
+  },
+}
+export const Parser: Record<string, ModuleParser> = {
+  raw: function(moduleId, module) {
+    return {
+      moduleId,
+      module
+    };
+  },
+  glob: function(moduleId, module) {
+    return {
+      moduleId,
+      module
+    };
+  },
 }

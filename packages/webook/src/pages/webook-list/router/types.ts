@@ -1,8 +1,15 @@
+export type ModuleId = string;
+export type ModuleLoader = () => Promise<any>;
+export type ModuleObject = {
+  moduleId: ModuleId,
+  module: ModuleLoader,
+};
+export type ModuleParser = (moduleId: ModuleId, module: ModuleLoader) => ModuleObject;
+
 export type RouterItem = {
   identifier: string;
   // functional
   load: () => Promise<any>;
-  default_module: string;
   // nav
   nav: string[];
   // extras
