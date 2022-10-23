@@ -1,5 +1,6 @@
 import { webook } from '../global';
-import { LIFE_HOOKS, StyleClassList } from './constant';
+import { RouterItem } from '../router/types';
+import { LIFE_HOOKS } from './constant';
 import { ModuleManagerSelector, getModuleTypeFromIdentifier } from './container/loader';
 import { generateMetaRecordsFooter } from './footer';
 import { BUTTON_KEYS, selectHeaderButton } from './header';
@@ -133,18 +134,13 @@ export const FragmentFactory = {
    * @param identifier to identify module's type, name, category and path
    * @returns Fragment 
    */
-  create: async (props: {
-    module: any,
-    identifier: string,
-    params?: Record<string, any>
-    template_style_token?: string,
-  }) => {
+  create: async (props: RouterItem) => {
     const { recordTimestamp } = FragmentFactory.createEffects();
 
-    const { module, identifier, template_style_token, params } = props;
+    const { module, moduleName , params } = props;
     const { theme, template } = webook.fragment;
 
-    const name = identifier.split('.').pop();
+    const name = moduleName.split('.').pop();
     const wrapper = await FragmentTemplateLoader.loadWrapper(theme, template.wrapper);
     const header = await FragmentTemplateLoader.loadHeader(theme, template.header);
     if (!header || !wrapper) return document.createElement('div');
@@ -154,7 +150,7 @@ export const FragmentFactory = {
     const fragment = new Fragment(wrapper);
 
     fragment.setHeader(header, name)
-      .setContainer(module, identifier)
+      .setContainer(module, moduleName)
       .setCallback(LIFE_HOOKS.ON_LOADED, (f: Fragment) => {
         f.setFooter({
           ...params,

@@ -4,6 +4,7 @@ import './fragment/styles/index.less';
 import { initMenu } from './menu';
 import { rudeDarkMode } from './utils';
 import { initRouter, loadFragmentFromRouter, RouterItem } from './router';
+import { ModuleObject } from './router/types';
 
 const DEBUG = true;
 
@@ -18,13 +19,13 @@ initRouter({
   __debug: DEBUG,
   navElement: nav,
   options: {
-    onItemSelected: async (item: RouterItem) => {
+    onItemSelected: async (item: ModuleObject) => {
       const fragment = await loadFragmentFromRouter(item);
       fragment && main?.appendChild(fragment);
     },
-    onRouterLoaded(objectList: RouterItem[], elementList: HTMLElement[]) {
+    onRouterLoaded(objectList: ModuleObject[], elementList: HTMLElement[]) {
       objectList.forEach(route => {
-        if (route.identifier.includes('react')) {
+        if (route.moduleName.includes('react')) {
           this.onItemSelected?.(route);
         }
       });

@@ -1,12 +1,12 @@
 import { LabelFactory } from "./label/Label";
 import { Parser, splitRouteIdentifier } from "./utils";
-import type { ModuleObject, ModuleParser, RouterItem, RouterOptions, RoutesCallback } from "./types";
+import type { ModuleObject, ModuleParser, RouterOptions, RoutesCallback } from "./types";
 
 const repo_url = 'https://github.com/astroleander/webook/blob/main';
 
 export class Router {
   navElement: Element | null = null;
-  routerList: RouterItem[] = [];
+  routerList: ModuleObject[] = [];
   // callback hooks
   onItemSelected?: RoutesCallback['onItemSelected'];
   // cycle hooks
@@ -16,12 +16,12 @@ export class Router {
     this.onItemSelected = options?.onItemSelected;
     this.onRouterLoaded = options?.onRouterLoaded;
   }
-  #createRouterElement(routes: RouterItem[]) {
+  #createRouterElement(routes: ModuleObject[]) {
     const routerList = [] as Array<HTMLElement>;
     for (const route of routes) {
       const li = document.createElement('li');
-      li.setAttribute('identifier', route.identifier);
-      const {type, sub_type, name} = splitRouteIdentifier(route.identifier);
+      li.setAttribute('identifier', route.moduleName);
+      const { type, sub_type, name } = splitRouteIdentifier(route.moduleName);
       li.appendChild(LabelFactory.create(type));
       sub_type && li.appendChild(LabelFactory.create(sub_type));
       li.append(name || '');
@@ -30,14 +30,13 @@ export class Router {
     }
     return routerList;
   }
-  #createRouterObject({moduleId, module}: ModuleObject) {
+  #createRouterObject(module: ModuleObject) {
     // e.g. `webrary/react/hooks/useTimer/index.tsx` from `import("./webook/webrary/react/hooks/useTimer/index.tsx")`
     return {
-      identifier: moduleId,
-      load: module,
-      nav: moduleId.split('.'),
+      ...module,
+      nav: module.moduleName.split('.'),
       // github_page_link: `${repo_url}${key}`,
-    } as RouterItem;
+    } as ModuleObject;
   }
   addModuleRoutesAsync(prosime: any, options: any) {
     prosime.then((m: any) => {
@@ -49,17 +48,18 @@ export class Router {
     routes: Record<string, () => Promise<any>> | undefined,
     parser: ModuleParser | ModuleParser[] = Parser.raw,
   ) {
-    const routerObjects: RouterItem[] = [];
+    const routerObjects: ModuleObject[] = [];
     for (const rawKey in routes) {
       if (Array.isArray(parser)) {
-        const modulePair = parser.reduce<ModuleObject>((prev, nextParser) => {
-          return nextParser(prev.moduleId, prev.module);
-        }, {moduleId: rawKey, module: routes[rawKey]});
-        const moduleObject = this.#createRouterObject(modulePair);
-        routerObjects.push(moduleObject);
+        const modulePair = parser.reduce<ModuleObject>((reducedRouter, nextParser) => {
+          return nextParser(reducedRouter);
+        }, { moduleName: rawKey, moduleLoader: routes[rawKey] });
+        routerObjects.push(this.#createRouterObject(modulePair));
       } else {
-        const moduleObject = this.#createRouterObject(parser(rawKey, routes[rawKey]));
-        routerObjects.push(moduleObject);
+        routerObjects.push(this.#createRouterObject(parser({
+          moduleName: rawKey,
+          moduleLoader: routes[rawKey],
+        })));
       }
     }
     this.routerList.push(...routerObjects);
