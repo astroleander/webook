@@ -137,7 +137,7 @@ export const FragmentFactory = {
   create: async (props: RouterItem) => {
     const { recordTimestamp } = FragmentFactory.createEffects();
 
-    const { module, moduleName , params } = props;
+    const { module, moduleName, params } = props;
     const { theme, template } = webook.fragment;
 
     const name = moduleName.split('.').pop();

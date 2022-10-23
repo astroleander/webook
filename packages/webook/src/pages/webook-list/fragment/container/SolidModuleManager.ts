@@ -25,10 +25,16 @@ export class SolidModuleManager implements ModuleManager {
       import('solid-js'),
       import('solid-js/web')
     ]).then(([Solid, SolidWeb]) => {
-      console.log('Loaded solid', this.module);
       // Manager scripts
       this.mount = () => {
-        SolidWeb.render(() => this.module, this.parent);
+        // dynamic imported solid would require a structure like this:
+        // {
+        //   _Hot$$<name>: {
+        //      component, name
+        //   } 
+        // }
+        const key_of_first_child = Object.keys(this.module)?.[0];
+        SolidWeb.render(this.module[key_of_first_child].component, this.parent);
       }
       this.unmount = () => {
 

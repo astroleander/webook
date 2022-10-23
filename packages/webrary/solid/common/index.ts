@@ -1,6 +1,6 @@
 import { getRoutesBasedBuildTool } from '@webrary/common';
 
-const routes = getRoutesBasedBuildTool({
+export const routes = getRoutesBasedBuildTool({
   vite: import.meta.glob('./**/index.*'),
 });
 

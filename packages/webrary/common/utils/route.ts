@@ -14,6 +14,7 @@ export const getRoutesBasedBuildTool = (props: {
 }
 
 const keySimplifer = (key: string) => {
+  console.log(key);
   const new_key_arr = key.split('/');
   const title = new_key_arr.map(str => {
     if (str.startsWith('index.')) return null;

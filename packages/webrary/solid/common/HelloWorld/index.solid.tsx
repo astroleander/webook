@@ -1,14 +1,7 @@
 /** this is a temprary solution cause vite-react-plugin & vite-solid-plugin do not support load by rules for now */
-import { createSignal, onCleanup } from "solid-js";
 
-const CountingComponent = () => {
-	const [count, setCount] = createSignal(0);
-	const interval = setInterval(
-		() => setCount(c => c + 1),
-		1000
-	);
-	onCleanup(() => clearInterval(interval));
-	return <div>Count value is {count()}</div>;
+const HelloWorld = () => {
+	return <div>Aloha Solid</div>;
 };
 
-export default () => <CountingComponent />;
+export default () => <HelloWorld/>;

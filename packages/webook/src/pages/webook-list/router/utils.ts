@@ -1,19 +1,14 @@
 import { FragmentFactory } from "../fragment";
-import type { ModuleLoader, ModuleObject, ModuleParser, RouterItem } from "./types";
+import type { ModuleObject, ModuleParser, RouterItem } from "./types";
 
-const moduleObjectToRouterItem = (moduleObject: ModuleObject): RouterItem  => {
-  return {
-    ...moduleObject,
-  } as RouterItem;
-}
-
-export const loadFragmentFromRouter = async (moudleObject: ModuleObject) => {
-  const { moduleName, moduleLoader, defaultModule, ...params } = moudleObject;
+export const loadFragmentFromRouter = async (moduleObject: ModuleObject) => {
+  const { moduleName, moduleLoader, defaultModule, ...params } = moduleObject;
   try {
     const module = await moduleLoader();  
+    console.log(moduleObject, moduleLoader, module)
     const key_of_first_child = Object.keys(module)?.[0];
     const fragment = await FragmentFactory.create({
-      ...moudleObject,
+      ...moduleObject,
       nav: moduleName.split('.'),
       module: module?.[defaultModule || key_of_first_child],
       params: {
@@ -24,7 +19,7 @@ export const loadFragmentFromRouter = async (moudleObject: ModuleObject) => {
     return fragment;
   } catch (err) {
     const error_fragment = await FragmentFactory.create({
-      ...moudleObject,
+      ...moduleObject,
       nav: moduleName.split('.'),
       module: {
         error: err,
