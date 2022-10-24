@@ -3,4 +3,5 @@ packages:
   - 'packages/webook'      # 'webook/package.json'
   - 'packages/webrary/**'  # 'any package.json under webrary/'
   - 'packages/graphics' # 'webgraphics/package.json'
+  - 'packages/leetcode' # 'leetcode/package.json'
 # @see https://pnpm.io/zh/pnpm-workspace_yaml
