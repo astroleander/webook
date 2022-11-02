@@ -25,9 +25,9 @@ initRouter({
     },
     onRouterLoaded(objectList: ModuleObject[], elementList: HTMLElement[]) {
       objectList.forEach(route => {
-        if (route.moduleName.includes('react')) {
-          this.onItemSelected?.(route);
-        }
+        // if (route.moduleName.includes('react')) {
+        //   this.onItemSelected?.(route);
+        // }
       });
     },
   }

@@ -13,6 +13,7 @@ export enum ModuleType {
   WEBOOK = 'webook',
   VUE = 'vue',
   SOLID = 'solid',
+  LEETCODE = 'leetcode',
 }
 
 export interface ModuleManager {
@@ -59,6 +60,14 @@ export const ModuleManagerSelector: Record<ModuleType, (m: any, parent: Element)
     const c = new SolidModuleManager(m, p, ModuleType.SOLID);
     await c.loadModule();
     return c;
+  },
+  [ModuleType.LEETCODE]: async (m, p) => {
+    console.log(m)
+    console.log(m)
+    console.log(m)
+    const controller = new SvelteModuleManager(m, p, ModuleType.SVELTE);
+    await controller.loadModule();
+    return controller;
   },
 };
 

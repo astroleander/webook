@@ -12,6 +12,8 @@ import * as react_performance from '@webrary/react/performance';
 import * as vue_routes from '@webrary/vue/common';
 import * as solid_routes from '@webrary/solid/common';
 
+import * as cc from '@webook/leetcode';
+
 export const initRouter = (props: {
   __debug: boolean,
   navElement: Element | null,
@@ -26,5 +28,7 @@ export const initRouter = (props: {
   router.addModuleRoutes(vue_routes.default,    [ParserBuilder.setPrefix('vue.common')]);
   router.addModuleRoutes(solid_routes.default, ParserBuilder.setPrefix('solid.common'));
 
-  // router.addModuleRoutesAsync(import('@webook/graphics'), [Parser.raw]);
+  // router.addModuleRoutesAsync(import('@webook/graphics'), m => m.modules, [Parser.raw]);
+  // router.addModuleRoutesAsync(import('@webook/leetcode'), m => m.modules, [ParserBuilder.setPrefix('leetcode')]);
+  router.addModuleRoutes(cc.modules, [ParserBuilder.setPrefix('leetcode')]);
 }

@@ -3,8 +3,9 @@ import type { ModuleObject, ModuleParser, RouterItem } from "./types";
 
 export const loadFragmentFromRouter = async (moduleObject: ModuleObject) => {
   const { moduleName, moduleLoader, defaultModule, ...params } = moduleObject;
+  console.log('[loadFragmentFromRouter]', moduleObject)
   try {
-    const module = await moduleLoader();  
+    const module = await moduleLoader();
     console.log(moduleObject, moduleLoader, module)
     const key_of_first_child = Object.keys(module)?.[0];
     const fragment = await FragmentFactory.create({
@@ -18,6 +19,7 @@ export const loadFragmentFromRouter = async (moduleObject: ModuleObject) => {
     } as RouterItem);
     return fragment;
   } catch (err) {
+    console.log('err', err)
     const error_fragment = await FragmentFactory.create({
       ...moduleObject,
       nav: moduleName.split('.'),
@@ -57,8 +59,13 @@ export const ParserBuilder: Record<string, ((x: any) => ModuleParser)> = {
 }
 export const Parser: Record<string, ModuleParser> = {
   raw: function(module) {
+    const addons = {} as any;
+    if (__BUILD__ === 'vite') {
+      addons.moduleName = module.moduleName.replace('./', '');
+    }
     return {
-      ...module
+      ...module,
+      ...addons, 
     };
   },
   glob: function(module) {

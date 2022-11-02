@@ -12,12 +12,13 @@
     "serve": "vite preview --config vite/vite.config.ts"
   },
   "dependencies": {
+    "@webook/graphics": "workspace:^",
+    "@webook/leetcode": "workspace:^1.0.0",
     "@webrary/react": "workspace:^",
     "@webrary/rn": "workspace:^",
     "@webrary/solid": "workspace:^",
     "@webrary/svelte": "workspace:^",
     "@webrary/vue": "workspace:^",
-    "@webook/graphics": "workspace:^",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-native-web": "^0.18.9",

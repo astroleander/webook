@@ -2,11 +2,15 @@
   "name": "@webook/leetcode",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "index.ts",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
   "author": "",
-  "license": "ISC"
+  "license": "ISC",
+  "devDependencies": {
+    "@tsconfig/svelte": "^3.0.0",
+    "svelte": "^3.50.1"
+  }
 }
