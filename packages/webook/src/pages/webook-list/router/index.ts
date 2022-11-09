@@ -12,7 +12,7 @@ import * as react_performance from '@webrary/react/performance';
 import * as vue_routes from '@webrary/vue/common';
 import * as solid_routes from '@webrary/solid/common';
 
-import * as cc from '@webook/leetcode';
+import * as leetcode_routes from '@webook/leetcode';
 
 export const initRouter = (props: {
   __debug: boolean,
@@ -30,5 +30,5 @@ export const initRouter = (props: {
 
   // router.addModuleRoutesAsync(import('@webook/graphics'), m => m.modules, [Parser.raw]);
   // router.addModuleRoutesAsync(import('@webook/leetcode'), m => m.modules, [ParserBuilder.setPrefix('leetcode')]);
-  router.addModuleRoutes(cc.modules, [ParserBuilder.setPrefix('leetcode')]);
+  router.addModuleRoutes(leetcode_routes.modules, [ParserBuilder.setPrefix('leetcode')]);
 }

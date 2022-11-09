@@ -17,8 +17,6 @@
   // let name = () => nameList[counter[1]%nameList.length];
 
   $: {
-    clear.forEach((c) => clearInterval(c));
-    // unsubscribe();
     clear[0] = setInterval(() => incr(0), interval[0]);
     clear[1] = setInterval(() => incr(1), interval[1]);
     clear[2] = setInterval(
@@ -26,15 +24,9 @@
       interval[2]
     );
   }
-  let signal_value;
-  const unsubscribe = signal.subscribe((value) => {
-    signal_value = value;
-  });
 </script>
 
 <h1>
   {helloList[counter[0] % helloList.length]}
   {name()}
-  {signal_value}
-  {$signal}
 </h1>
