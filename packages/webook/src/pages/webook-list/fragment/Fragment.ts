@@ -4,9 +4,8 @@ import { LIFE_HOOKS } from './constant';
 import { ModuleManagerSelector, getModuleTypeFromIdentifier } from './container/loader';
 import { generateMetaRecordsFooter } from './footer';
 import { BUTTON_KEYS, selectHeaderButton } from './header';
-import { recursiveLoadTheme } from './themes/themeLoader';
-import { effects, getMapkey } from './utils';
-
+import { getMapKey, recursiveLoadTheme } from './utils';
+import { effects } from './effects';
 type Module = any;
 /**
  * Fragment: structure from template
@@ -192,26 +191,31 @@ const FragmentTemplateLoader = {
       template_token: template ?? 'basic',
       theme_token: theme_token ?? 'basic',
     });
+    
     await recursiveLoadTheme(fragment, theme_token);
     return fragment?.firstChild as Element;
   },  
   setCacheIfNotExists: (props: Loader, fragment: DocumentFragment) => {
-    const key = getMapkey(...Object.values(props));
+    const key = getMapKey(...Object.values(props));
     if (!FragmentTemplateLoader.cache.has(key)) {
       FragmentTemplateLoader.cache.set(key, fragment);
     }
   },
   getCache: (props: Loader) => {
-    const key = getMapkey(...Object.values(props));
+    const key = getMapKey(...Object.values(props));
     return FragmentTemplateLoader.cache.get(key);
   },
   loadTemplate: async (props: Loader) => {
     try {
       const htmlRaw = await import(`./templates/${props.component_token}/${props.template_token}.html?raw`);
-      const node = document.createRange().createContextualFragment(htmlRaw.default);
-      const element = (FragmentTemplateLoader.getCache(props) ?? node).cloneNode(true);
-      FragmentTemplateLoader.setCacheIfNotExists(props, node);
-      return element as Element;
+      const cache = FragmentTemplateLoader.getCache(props);
+      if (cache) {
+        return cache.cloneNode(true) as Element;
+      } else {
+        const node = document.createRange().createContextualFragment(htmlRaw.default);
+        FragmentTemplateLoader.setCacheIfNotExists(props, node);
+        return node.cloneNode(true) as Element;
+      }
     } catch (err) {
       return null;
     }

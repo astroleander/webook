@@ -15,12 +15,12 @@
 /**
  * CSS files and styles can't be nested (due to css-loader module feature)
  * @param root documentfragment template root element
- * @param theme them_token
+ * @param theme theme_token
  */
 export const recursiveLoadTheme = async (root: Element | null, theme?: string) => {
   if (!root) { return };
   try {
-    const classesModule = await import(`./${theme}.module.css`);
+    const classesModule = await import(`../themes/${theme}.module.css`);
     const classes = {
       ...classesModule,
       ...classesModule.default
