@@ -1,4 +1,5 @@
 import { ModuleManager } from './loader';
+import { ModuleType } from './types';
 
 type AppRoot = any;
 
@@ -15,7 +16,7 @@ export class SvelteModuleManager implements ModuleManager {
   root: AppRoot;
   parent: Element;
   
-  constructor(module: any, parent: Element, type: string) {
+  constructor(module: any, parent: Element, type: string = ModuleType.SVELTE) {
     this._type = type;
     this._module = module;
     this.parent = parent; 

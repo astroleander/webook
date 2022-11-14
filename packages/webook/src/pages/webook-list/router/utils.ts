@@ -1,40 +1,24 @@
 import { FragmentFactory } from "../fragment";
-import type { ModuleObject, ModuleParser, RouterItem } from "./types";
+import type { ModuleObject, ModuleParser } from "./types";
 
 export const loadFragmentFromRouter = async (moduleObject: ModuleObject) => {
-  const { moduleName, moduleLoader, defaultModule, ...params } = moduleObject;
   console.log('[loadFragmentFromRouter]', moduleObject)
-  try {
-    const module = await moduleLoader();
-    console.log(moduleObject, moduleLoader, module)
-    const key_of_first_child = Object.keys(module)?.[0];
-    const fragment = await FragmentFactory.create({
-      ...moduleObject,
-      nav: moduleName.split('.'),
-      module: module?.[defaultModule || key_of_first_child],
-      params: {
+  const fragment = await FragmentFactory.create(moduleObject);
+  return fragment;
 
-        github_page_link: params.github_page_link
-      }
-    } as RouterItem);
-    return fragment;
-  } catch (err) {
-    console.log('err', err)
-    const error_fragment = await FragmentFactory.create({
-      ...moduleObject,
-      nav: moduleName.split('.'),
-      module: {
-        error: err,
-        module_name: moduleName,
-      },
-      params: {}
-    });
-    return error_fragment;
-  }
+  // const error_fragment = await FragmentFactory.create({
+  //   ...moduleObject,
+  //   nav: nav ?? moduleName.split('/'),
+  //   module: {
+  //     error: err,
+  //     module_name: moduleName,
+  //   },
+  //   params: {}
+  // });
 }
 
 export const splitRouteIdentifier = (identifier: string) => {
-  const parts = identifier.split('.');
+  const parts = identifier.split('/');
   return {
     type: parts[0],
     sub_type: parts.length - 1 === 1 ? undefined : parts[1],
@@ -43,34 +27,36 @@ export const splitRouteIdentifier = (identifier: string) => {
     raw: identifier,
   }
 }
-export const ParserBuilder: Record<string, ((x: any) => ModuleParser)> = {
-  setPrefix: (prefix: string) => function(module) {
+
+export const ParserBuilder: Record<string, ((...props: any[]) => ModuleParser)> = {
+  setPrefix: (prefix: string, navSetter?: (x: string) => string[]) => function (module) {
+    const modulename = `${prefix}/${module.moduleName}`;
     return {
       ...module,
-      moduleName: `${prefix}.${module.moduleName}`,
+      moduleName: modulename,
+      nav: navSetter ? [prefix, ...navSetter(module.moduleName)] : modulename.split('/'),
     }
   },
-  setDefaultModule: (defaultModuleName: string) => function(module) {
+  setDefaultModule: (defaultModuleName: string) => function (module) {
     return {
       ...module,
       defaultModule: defaultModuleName,
     }
   },
-}
+};
+
 export const Parser: Record<string, ModuleParser> = {
-  raw: function(module) {
+  raw: function (module) {
     const addons = {} as any;
     if (__BUILD__ === 'vite') {
       addons.moduleName = module.moduleName.replace('./', '');
     }
     return {
       ...module,
-      ...addons, 
+      ...addons,
     };
   },
-  glob: function(module) {
-    return {
-      ...module
-    };
-  },
+  leetcode: function (module) {
+    return { ...(module.moduleLoader()) } as any as ModuleObject;
+  }
 }

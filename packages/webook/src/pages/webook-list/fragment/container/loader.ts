@@ -4,68 +4,55 @@ import { WebookModuleManager } from './WebookModuleManager';
 import { RNModuleManager } from './RNModuleManager';
 import { VueModuleManager } from './VueModuleManager';
 import { SolidModuleManager } from './SolidModuleManager';
-
-export enum ModuleType {
-  REACT_DOM = 'react-dom',
-  REACT = 'react',
-  RN = 'rn',
-  SVELTE = 'svelte',
-  WEBOOK = 'webook',
-  VUE = 'vue',
-  SOLID = 'solid',
-  LEETCODE = 'leetcode',
-}
-
+import { LeetCodeModuleManager } from './LeetCodeModuleManager';
+import { ModuleType } from './types';
 export interface ModuleManager {
-  type: ModuleType[keyof ModuleType];
   module: any;
+  type?: string;
   meta?: Record<string, string>;
   mount: () => void;
   unmount: () => void;
 }
 
-export const ModuleManagerSelector: Record<ModuleType, (m: any, parent: Element) => Promise<ModuleManager>> = {
+export const ModuleManagerSelector: Record<ModuleType, (m: any, parent: Element, options?: Record<string, any>) => Promise<ModuleManager>> = {
   [ModuleType.REACT_DOM]: async (m, p) => {
-    const controller = new ReactModuleManager(m, p, ModuleType.REACT_DOM)
+    const controller = new ReactModuleManager(m, p)
     await controller.loadModule();
     return controller;
   },
   [ModuleType.REACT]: async (m, p) => {
-    const controller = new ReactModuleManager(m, p, ModuleType.REACT)
+    const controller = new ReactModuleManager(m, p)
     await controller.loadModule();
     return controller;
   },
   [ModuleType.RN]: async (m, p) => {
-    const controller = new RNModuleManager(m, p, ModuleType.RN)
+    const controller = new RNModuleManager(m, p)
     await controller.loadModule();
     return controller;
   },
   [ModuleType.SVELTE]: async (m, p) => {
-    const controller = new SvelteModuleManager(m, p, ModuleType.SVELTE);
+    const controller = new SvelteModuleManager(m, p);
     await controller.loadModule();
     return controller;
   },
   // internal type
   [ModuleType.WEBOOK]: async (m, p) => {
-    const c = new WebookModuleManager(m, p, ModuleType.WEBOOK);
+    const c = new WebookModuleManager(m, p);
     await c.loadModule();
     return c;
   },
   [ModuleType.VUE]: async (m, p) => {
-    const c = new VueModuleManager(m, p, ModuleType.VUE);
+    const c = new VueModuleManager(m, p);
     await c.loadModule();
     return c;
   },
   [ModuleType.SOLID]: async (m, p) => {
-    const c = new SolidModuleManager(m, p, ModuleType.SOLID);
+    const c = new SolidModuleManager(m, p);
     await c.loadModule();
     return c;
   },
   [ModuleType.LEETCODE]: async (m, p) => {
-    console.log(m)
-    console.log(m)
-    console.log(m)
-    const controller = new SvelteModuleManager(m, p, ModuleType.SVELTE);
+    const controller = new LeetCodeModuleManager(m, p);
     await controller.loadModule();
     return controller;
   },
@@ -73,5 +60,5 @@ export const ModuleManagerSelector: Record<ModuleType, (m: any, parent: Element)
 
 export const getModuleTypeFromIdentifier = (identifier: string) => {
   // TODO: add fallback
-  return identifier.split('.')[0] as ModuleType;
+  return identifier as ModuleType;
 }

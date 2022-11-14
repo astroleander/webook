@@ -1,9 +1,9 @@
 
 import { loadFragmentFromRouter, Parser, ParserBuilder } from './utils';
 import { Router } from './Router';
-import type { RouterOptions, RouterItem } from './types';
+import type { RouterOptions } from './types';
 
-export { loadFragmentFromRouter, RouterItem };
+export { loadFragmentFromRouter };
 
 import * as hooks_routes from '@webrary/react/hooks';
 import * as svelte_routes from '@webrary/svelte/common';
@@ -13,7 +13,6 @@ import * as vue_routes from '@webrary/vue/common';
 import * as solid_routes from '@webrary/solid/common';
 
 import * as leetcode_routes from '@webook/leetcode';
-
 export const initRouter = (props: {
   __debug: boolean,
   navElement: Element | null,
@@ -21,14 +20,14 @@ export const initRouter = (props: {
 }) => {
   const router = new Router(props.navElement, props.options);
 
-  router.addModuleRoutes(hooks_routes.default,  [ParserBuilder.setPrefix('react.hooks')]);
-  router.addModuleRoutes(svelte_routes.default, [ParserBuilder.setPrefix('svelte.common')]);
-  router.addModuleRoutes(rn_routes.default,     [ParserBuilder.setPrefix('rn.common')]);
-  router.addModuleRoutes(react_performance.default, [ParserBuilder.setPrefix('react.performance')]);
-  router.addModuleRoutes(vue_routes.default,    [ParserBuilder.setPrefix('vue.common')]);
-  router.addModuleRoutes(solid_routes.default, ParserBuilder.setPrefix('solid.common'));
-
-  // router.addModuleRoutesAsync(import('@webook/graphics'), m => m.modules, [Parser.raw]);
-  // router.addModuleRoutesAsync(import('@webook/leetcode'), m => m.modules, [ParserBuilder.setPrefix('leetcode')]);
-  router.addModuleRoutes(leetcode_routes.modules, [ParserBuilder.setPrefix('leetcode')]);
+  router.addModuleRoutes(hooks_routes.default,  [ParserBuilder.setPrefix('react/hooks')]);
+  router.addModuleRoutes(svelte_routes.default, [ParserBuilder.setPrefix('svelte/common')]);
+  router.addModuleRoutes(rn_routes.default,     [ParserBuilder.setPrefix('rn/common')]);
+  router.addModuleRoutes(react_performance.default, [ParserBuilder.setPrefix('react/performance')]);
+  router.addModuleRoutes(vue_routes.default,    [ParserBuilder.setPrefix('vue/common')]);
+  router.addModuleRoutes(solid_routes.default, ParserBuilder.setPrefix('solid/common'));
+  router.addRecursiveModuleRoutes(leetcode_routes.modules, [
+    Parser.leetcode,
+    ParserBuilder.setPrefix('leetcode', (x: string) => x.split('/'))
+  ]);
 }

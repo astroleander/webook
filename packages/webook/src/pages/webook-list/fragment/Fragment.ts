@@ -1,11 +1,12 @@
 import { webook } from '../global';
-import { RouterItem } from '../router/types';
 import { LIFE_HOOKS } from './constant';
 import { ModuleManagerSelector, getModuleTypeFromIdentifier } from './container/loader';
 import { generateMetaRecordsFooter } from './footer';
 import { BUTTON_KEYS, selectHeaderButton } from './header';
 import { getMapKey, recursiveLoadTheme } from './utils';
 import { effects } from './effects';
+import { ModuleObject } from '../router/types';
+import { createCodeBox } from './extensions/CodeBox';
 type Module = any;
 /**
  * Fragment: structure from template
@@ -44,10 +45,10 @@ class Fragment {
         this.mount();
       }
       this.collapsed = !this.collapsed;
-    }  
+    }
   }
   // callback hooks
-  onContainerLoaded: Function = () => {};
+  onContainerLoaded: Function = () => { };
 
   constructor(node: Element) {
     this.element = node;
@@ -66,32 +67,44 @@ class Fragment {
     return this;
   }
 
-  setContainer(module: Module, identifier: string) {
-    const container = this.element?.querySelector('main');
-    const loadComponent = async () => {
-      console.log('[load component]', identifier);
-      if (container) {
+  setContainer(moduleObject: ModuleObject) {
+    const { moduleName, moduleLoader, defaultModule, nav, ...params } = moduleObject;
+    try {
+      const container = this.element?.querySelector('main');
+      if (!container) {
+        throw new Error('[Template Parsing Warning] Didn\'t find main element in your template');
+      };
+      const loadComponent = async () => {
         const recordTimestamp = effects.recordTimestamp();
-        const moduleType = getModuleTypeFromIdentifier(identifier);
-        const moduleManager = await ModuleManagerSelector[moduleType](module, container);
-        this.mount = moduleManager.mount;
-        this.unmount = moduleManager.unmount;
-        await this.mount();
+        const esmodule = await moduleObject.moduleLoader();
+        const key_of_first_child = Object.keys(esmodule)?.[0];
+
+        const nav = moduleObject.nav ?? moduleObject.moduleName.split('/');
+        const module = esmodule?.[defaultModule || key_of_first_child];
+        const moduleType = getModuleTypeFromIdentifier(nav[0]);
+
+        const Manager = await ModuleManagerSelector[moduleType](module, container);
+        if (!Manager) {
+          throw new Error(`[Template Parsing Warning] Get moduleManager failed, moduleType:', ${moduleType}`)
+        }
+        this.mount = Manager?.mount;
+        this.unmount = Manager?.unmount;
+        await this.mount?.();
         this.setMeta({
           'timestamp(ts)': recordTimestamp(),
-          ...moduleManager.meta,
-        });
-      } else {
-        console.warn('[Template Parsing Warning] Didn\'t find main element in your template');
-        return;
+          ...Manager.meta,
+        })
       };
-    };
-    loadComponent().then(() => this.onContainerLoaded(this));
-    return this;
-  }
+      loadComponent().then(() => this.onContainerLoaded(this));
+    } catch (err) {
+      console.warn('[FragmentFactory][setContainer]', err)
+    } finally {
+      return this;  
+    }
+  };
 
   setCallback(element_key: string, callback: Function) {
-    if (!this.element) { return this};
+    if (!this.element) { return this };
     switch (element_key) {
       case BUTTON_KEYS.CLOSE:
       case BUTTON_KEYS.COLLAPSE:
@@ -119,6 +132,17 @@ class Fragment {
     this.meta = Object.assign(this.meta, meta || {});
     return this;
   }
+
+  setExtensions(moduleObject: ModuleObject) {
+    const setupExtensions = async () => {
+      if (moduleObject?.moduleRaw) {
+        const code = await moduleObject.moduleRaw();
+        this.element?.children[1].insertAdjacentElement('afterend', createCodeBox({ source: code }));
+      }  
+    }
+    setupExtensions();
+    return this;
+  }
 }
 
 export const FragmentFactory = {
@@ -133,13 +157,14 @@ export const FragmentFactory = {
    * @param identifier to identify module's type, name, category and path
    * @returns Fragment 
    */
-  create: async (props: RouterItem) => {
+  create: async (moduleObject: ModuleObject) => {
     const { recordTimestamp } = FragmentFactory.createEffects();
-
-    const { module, moduleName, params } = props;
+    const { moduleName, } = moduleObject;
+    const params = {
+      github_page_link: moduleObject?.github_page_link
+    }
     const { theme, template } = webook.fragment;
-
-    const name = moduleName.split('.').pop();
+    const name = moduleName;
     const wrapper = await FragmentTemplateLoader.loadWrapper(theme, template.wrapper);
     const header = await FragmentTemplateLoader.loadHeader(theme, template.header);
     if (!header || !wrapper) return document.createElement('div');
@@ -149,10 +174,11 @@ export const FragmentFactory = {
     const fragment = new Fragment(wrapper);
 
     fragment.setHeader(header, name)
-      .setContainer(module, moduleName)
+      .setContainer(moduleObject)
+      .setExtensions(moduleObject)
       .setCallback(LIFE_HOOKS.ON_LOADED, (f: Fragment) => {
         f.setFooter({
-          ...params,
+          // ...params,
           'timestamp(all)': recordTimestamp(),
           'timestamp(html)': templateLoaded,
         });
@@ -186,15 +212,15 @@ const FragmentTemplateLoader = {
     return fragment;
   },
   loadWrapper: async (theme_token?: string, template?: string) => {
-    const fragment =  await FragmentTemplateLoader.loadTemplate({
+    const fragment = await FragmentTemplateLoader.loadTemplate({
       component_token: 'wrapper',
       template_token: template ?? 'basic',
       theme_token: theme_token ?? 'basic',
     });
-    
+
     await recursiveLoadTheme(fragment, theme_token);
     return fragment?.firstChild as Element;
-  },  
+  },
   setCacheIfNotExists: (props: Loader, fragment: DocumentFragment) => {
     const key = getMapKey(...Object.values(props));
     if (!FragmentTemplateLoader.cache.has(key)) {

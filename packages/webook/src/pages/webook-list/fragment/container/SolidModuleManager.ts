@@ -1,4 +1,5 @@
 import { ModuleManager } from './loader';
+import { ModuleType } from './types';
 
 type SolidJSRoot = any;
 
@@ -14,7 +15,7 @@ export class SolidModuleManager implements ModuleManager {
   root: SolidJSRoot;
   parent: Element;
 
-  constructor(module: any, parent: Element, type: string) {
+  constructor(module: any, parent: Element, type: string = ModuleType.SOLID) {
     this._type = type;
     this._module = module;
     this.parent = parent; 

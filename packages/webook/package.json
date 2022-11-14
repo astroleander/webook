@@ -13,7 +13,7 @@
   },
   "dependencies": {
     "@webook/graphics": "workspace:^",
-    "@webook/leetcode": "workspace:^1.0.0",
+    "@webook/leetcode": "workspace:^",
     "@webrary/react": "workspace:^",
     "@webrary/rn": "workspace:^",
     "@webrary/solid": "workspace:^",

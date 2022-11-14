@@ -1,4 +1,5 @@
 import { ModuleManager } from "./loader";
+import { ModuleType } from "./types";
 
 type VueApp = any;
 
@@ -14,7 +15,7 @@ export class VueModuleManager implements ModuleManager {
   app: VueApp;
   parent: Element;
 
-  constructor(module: any, parent: Element, type: string) {
+  constructor(module: any, parent: Element, type: string = ModuleType.VUE) {
     this._type = type;
     this._module = module;
     this.parent = parent;

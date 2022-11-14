@@ -1,3 +1,4 @@
+// common
 export const twoSum = (nums, target) => {
   const mat = {};
   for (let i = 0; i < nums.length; i++) {

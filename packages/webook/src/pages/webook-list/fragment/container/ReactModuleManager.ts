@@ -1,4 +1,5 @@
 import { ModuleManager } from './loader';
+import { ModuleType } from './types';
 
 type ReactRoot = any;
 
@@ -14,7 +15,7 @@ export class ReactModuleManager implements ModuleManager {
   root: ReactRoot;
   parent: Element;
   
-  constructor(module: any, parent: Element, type: string) {
+  constructor(module: any, parent: Element, type: string = ModuleType.REACT) {
     this._type = type;
     this._module = module;
     this.parent = parent; 

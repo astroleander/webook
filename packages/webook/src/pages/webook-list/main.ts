@@ -3,7 +3,7 @@ import './fragment/styles/index.less';
 
 import { initMenu } from './menu';
 import { rudeDarkMode } from './utils';
-import { initRouter, loadFragmentFromRouter, RouterItem } from './router';
+import { initRouter, loadFragmentFromRouter } from './router';
 import { ModuleObject } from './router/types';
 
 const DEBUG = true;

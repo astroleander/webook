@@ -1,4 +1,5 @@
 import { ModuleManager } from './loader';
+import { ModuleType } from './types';
 
 type AppRoot = any;
 
@@ -14,7 +15,7 @@ export class WebookModuleManager implements ModuleManager {
   root: AppRoot;
   parent: Element;
   
-  constructor(module: any, parent: Element, type: string) {
+  constructor(module: any, parent: Element, type: string = ModuleType.WEBOOK) {
     this._type = type;
     this._module = module;
     this.parent = parent;
