@@ -35,7 +35,7 @@ export class RNModuleManager implements ModuleManager {
         this.root.render(module);
       }
       this.unmount = () => {
-        this.root.unmount();
+        this.root?.unmount();
         this.root = null;
       };
       this._meta = {

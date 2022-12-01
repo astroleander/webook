@@ -38,7 +38,7 @@ export class SvelteModuleManager implements ModuleManager {
       })
     }
     this.unmount = () => {
-      this.root.$destroy();
+      this.root?.$destroy();
       this.root = null;
     };
   }

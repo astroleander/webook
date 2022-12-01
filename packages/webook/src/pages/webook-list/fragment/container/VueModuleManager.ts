@@ -29,7 +29,7 @@ export class VueModuleManager implements ModuleManager {
         this.app.mount(this.parent);
       };
       this.unmount = () => {
-        this.app.unmount();
+        this.app?.unmount();
         this.app = null;
       };
 
