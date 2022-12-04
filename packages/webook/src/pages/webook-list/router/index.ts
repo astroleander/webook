@@ -27,4 +27,5 @@ export const initRouter = (props: {
   router.addModuleRoutes(solid_routes.default, ParserBuilder.setPrefix('solid.common'));
 
   // router.addModuleRoutesAsync(import('@webook/graphics'), [Parser.raw]);
+  router.addModuleRoutesAsync(import('@webrary/react/toys'), [ParserBuilder.setPrefix('react.toys')]);
 }

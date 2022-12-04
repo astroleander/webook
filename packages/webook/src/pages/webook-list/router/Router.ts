@@ -38,10 +38,10 @@ export class Router {
       // github_page_link: `${repo_url}${key}`,
     } as ModuleObject;
   }
-  addModuleRoutesAsync(prosime: any, options: any) {
+  addModuleRoutesAsync(prosime: any, parser: any) {
     prosime.then((m: any) => {
-      const { modules, name } = m;
-      // this.addModuleRoutes(modules, { prefix: name, name })
+      const { modules, default: defaultModules } = m;
+      this.addModuleRoutes(modules || defaultModules, parser);
     })
   }
   addModuleRoutes(

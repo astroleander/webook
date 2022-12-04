@@ -5,7 +5,6 @@ export const loadFragmentFromRouter = async (moduleObject: ModuleObject) => {
   const { moduleName, moduleLoader, defaultModule, ...params } = moduleObject;
   try {
     const module = await moduleLoader();  
-    console.log(moduleObject, moduleLoader, module)
     const key_of_first_child = Object.keys(module)?.[0];
     const fragment = await FragmentFactory.create({
       ...moduleObject,
